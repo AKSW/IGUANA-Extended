@@ -24,7 +24,8 @@
 		<testcases>
 			<testcase class="org.aksw.iguana.extended.testcases.QECacheTestcase">
 				<property name="queries-path" value="path/to/queries/queries.txt" />
-			</testcase>
+				<property name="timeLimit" value="160000"/> <!--time in ms-->
+ 			</testcase>
 		</testcases>
 	</suite>
 </iguana>
