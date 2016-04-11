@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<iguana xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<databases main="dbpedia">
+		<database id="virtuoso" type="impl">
+			<endpoint uri="http://localhost:8891/sparql-auth" />
+			<user value="dba" />
+			<pwd value="dba" />
+		</database>
+		<database id="ref" type="impl">
+			<endpoint uri="http://dbpedia.org/sparql" />
+		</database>
+		<database id="ref2" type="impl">
+			<endpoint uri="http://dbpedia.org/sparql" />
+		</database>
+	</databases>
+	<suite>
+		<graph-uri name="http://dbpedia.org" />
+		<random-function type="RandomTriple" generate="false">
+			<percent value="1.0" file-name="dbpedia1./" />			
+		</random-function>
+		<test-db type="choose" reference="ref">
+			<db id="ref2" />
+		</test-db>
+		<testcases>
+			<testcase class="org.aksw.iguana.extended.testcases.QECacheTestcase">
+				<property name="queries-path" value="path/to/queries/queries.txt" />
+			</testcase>
+		</testcases>
+	</suite>
+</iguana>
+
