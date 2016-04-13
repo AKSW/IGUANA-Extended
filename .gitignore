@@ -4,8 +4,13 @@
 .settings
 target
 
+logs
+results*.zip
+
 #bin
 #cache
+
+
 
 # Package Files #
 #*.jar
