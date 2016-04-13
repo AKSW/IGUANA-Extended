@@ -5,6 +5,7 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
@@ -15,6 +16,7 @@ import java.util.logging.Logger;
 import org.aksw.iguana.extended.testcases.workers.DetailedWorker;
 import org.aksw.iguana.testcases.Testcase;
 import org.aksw.iguana.testcases.workers.UpdateFileHandler;
+import org.aksw.iguana.testcases.workers.Worker.LatencyStrategy;
 import org.aksw.iguana.utils.CalendarHandler;
 import org.aksw.iguana.utils.ResultSet;
 import org.aksw.iguana.utils.TimeOutException;
@@ -133,10 +135,22 @@ public class QECacheTestcase implements Testcase {
     }
 
     protected void initWorkers(){
+//		worker.setProps(sparqlProps);
+		List<LatencyStrategy> latencyStrategy=new LinkedList<LatencyStrategy>();
+		List<Integer[]> latencyAmount = new LinkedList<Integer[]>();
+		
+
+		
         for(int i=0;i<workers;i++){
-            //TODO
             DetailedWorker worker = new DetailedWorker();
             worker.isPattern(false);
+            worker.setLatencyAmount(latencyAmount);
+    		worker.setLatencyStrategy(latencyStrategy);
+    		worker.setQueriesPath(prop.getProperty("queries-path"));
+    		worker.setTimeLimit(timeLimit);
+    		worker.setPrefixes(this.prefixes);
+    		worker.setConName(conName);
+            worker.setConnection(con);
             worker.setWorkerNr(i);
             worker.setProps(prop);
             worker.init(i);

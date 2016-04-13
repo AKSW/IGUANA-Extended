@@ -23,7 +23,7 @@
 		</test-db>
 		<testcases>
 			<testcase class="org.aksw.iguana.extended.testcases.QECacheTestcase">
-				<property name="queries-path" value="path/to/queries/queries.txt" />
+				<property name="queries-path" value="src/main/resources/queries.txt" />
 				<property name="timeLimit" value="160000"/> <!--time in ms-->
  			</testcase>
 		</testcases>
