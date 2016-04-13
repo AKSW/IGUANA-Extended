@@ -8,6 +8,7 @@ import org.aksw.jena_sparql_api.core.QueryExecutionFactory;
 
 import com.hp.hpl.jena.query.Query;
 import com.hp.hpl.jena.query.QueryExecution;
+import com.hp.hpl.jena.query.QueryFactory;
 import com.ibm.icu.util.Calendar;
 
 public class DetailedWorker extends SparqlWorker implements Runnable {
@@ -37,9 +38,20 @@ public class DetailedWorker extends SparqlWorker implements Runnable {
                    .config()
                    .end()
                    .create();
-        QueryExecution qexec = rawQef.createQueryExecution(query);
+
+        Query q=null;
+        try{
+        	q = QueryFactory.create(query);
+        }
+        catch(Exception e){
+        	e.printStackTrace();
+        	return -1;
+        }
+        QueryExecution qexec = rawQef.createQueryExecution(q);
         //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-        int qType=qexec.getQuery().getQueryType();
+//        Query q = qexec.getQuery();
+        log.info("Testing now "+q.toString());
+        int qType=q.getQueryType();//q.getQueryType();
         long start = Calendar.getInstance().getTimeInMillis();
         //TODO if their is something to do with the results
         switch(qType){
