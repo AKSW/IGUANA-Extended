@@ -173,8 +173,8 @@ public class QECacheTestcase implements Testcase {
 
     @Override
     public void setProperties(Properties p) {
-        //this.props = p;
-        //this.timeLimit = p.getProperty("timeLimit");
+        this.prop = p;
+        this.timeLimit = Long.valueOf(p.getProperty("timeLimit"));
 
     }
 
