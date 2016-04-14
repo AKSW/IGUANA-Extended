@@ -21,7 +21,10 @@ import org.aksw.jena_sparql_api.utils.transform.F_QueryTransformDatesetDescripti
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryFactory;
+import org.apache.jena.query.ResultSet;
+import org.apache.jena.query.ResultSetFormatter;
 import org.apache.jena.query.Syntax;
+import org.apache.jena.rdf.model.Model;
 import org.bio_gene.wookie.utils.LogHandler;
 
 import com.ibm.icu.util.Calendar;
@@ -99,19 +102,9 @@ public class DetailedWorker extends SparqlWorker implements Runnable {
 		waitTime();
 		int time = -1;
 
-		// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-		// TODO Whatever the executin factory needs
-		// QueryExecutionFactory rawQef = FluentQueryExecutionFactory
-		// .http("http://akswnc3.informatik.uni-leipzig.de/data/dbpedia/sparql",
-		// "http://dbpedia.org")
-		// .config()
-		// .end()
-		// .create();
 		QueryExecutionFactory rawQef = FluentQueryExecutionFactory
-				// .from(model)
 				.http("http://akswnc3.informatik.uni-leipzig.de/data/dbpedia/sparql",
 						"http://dbpedia.org")
-				// .http("http://localhost:8890/sparql", "http://dbpedia.org")
 				.config()
 				.withParser(SparqlQueryParserImpl.create(Syntax.syntaxARQ))
 				.withQueryTransform(F_QueryTransformDatesetDescription.fn)
@@ -122,63 +115,21 @@ public class DetailedWorker extends SparqlWorker implements Runnable {
 		// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 		// Query q = qexec.getQuery();
 		log.info("Testing now " + query);
-		int qType = q.getQueryType();// q.getQueryType();
-		long start = Calendar.getInstance().getTimeInMillis();
-		// TODO if their is something to do with the results
-
-		switch (qType) {
-		case Query.QueryTypeAsk:
-			qexec.execAsk();
-			break;
-		case Query.QueryTypeConstruct:
-			qexec.execConstruct();
-			break;
-		case Query.QueryTypeDescribe:
-			qexec.execDescribe();
-			break;
-		case Query.QueryTypeSelect:
-			qexec.execSelect();
-			break;
-		}
-		long end = Calendar.getInstance().getTimeInMillis();
-		time = Long.valueOf(end - start).intValue();
-
-		return time;
+		return testQueryQE(q, qexec);
 	}
 
 	private Integer testQueryCached(String query) {
 		waitTime();
 		int time = -1;
 
-		// <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-		// TODO Whatever the executin factory needs
-		// QueryExecutionFactory rawQef = FluentQueryExecutionFactory
-		// .http("http://akswnc3.informatik.uni-leipzig.de/data/dbpedia/sparql",
-		// "http://dbpedia.org")
-		// .config()
-		// .end()
-		// .create();
 		QueryExecutionFactory rawQef = FluentQueryExecutionFactory
-				// .from(model)
 				.http("http://akswnc3.informatik.uni-leipzig.de/data/dbpedia/sparql",
 						"http://dbpedia.org")
-				// .http("http://localhost:8890/sparql", "http://dbpedia.org")
 				.config()
 				.withParser(SparqlQueryParserImpl.create(Syntax.syntaxARQ))
 				.withQueryTransform(F_QueryTransformDatesetDescription.fn)
 				.withPagination(100000).end().create();
 
-		// System.out.println(ResultSetFormatter.asText(rawQef.createQueryExecution(
-		// "SELECT * { GRAPH ?g {  ?s <http://ex.org/p1> ?o1 ; <http://ex.org/p2> ?o2 } }").execSelect()));
-		// System.out.println("End of test query");
-
-		// QueryExecutionFactory sparqlService = SparqlServiceBuilder
-		// .http("http://akswnc3.informatik.uni-leipzig.de:8860/sparql",
-		// "http://dbpedia.org")
-		// .withPagination(100000)
-		// .create();
-
-		// MainSparqlViewCache cache = new MainSparqlViewCache(rawQef);
 
 		QueryExecutionFactory cachedQef = new QueryExecutionFactoryViewCacheMaster(
 				rawQef, OpExecutorFactoryViewCache.get().getServiceMap());
@@ -188,26 +139,39 @@ public class DetailedWorker extends SparqlWorker implements Runnable {
 
 		Query q = null;
 		q = QueryFactory.create(query);
-		QueryExecution qexec = cachedQef.createQueryExecution(q);
-		// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-		// Query q = qexec.getQuery();
+		QueryExecution qexec = rawQef.createQueryExecution(q);
+
 		log.info("Testing now " + query);
+		return testQueryQE(q, qexec);
+	}
+	
+	private Integer testQueryQE(Query q, QueryExecution qexec){
 		int qType = q.getQueryType();// q.getQueryType();
 		long start = Calendar.getInstance().getTimeInMillis();
 		// TODO if their is something to do with the results
-
+		Integer time=-1;
 		switch (qType) {
 		case Query.QueryTypeAsk:
 			qexec.execAsk();
 			break;
 		case Query.QueryTypeConstruct:
-			qexec.execConstruct();
+			Model m = qexec.execConstruct();
 			break;
 		case Query.QueryTypeDescribe:
-			qexec.execDescribe();
+			m = qexec.execDescribe();
 			break;
 		case Query.QueryTypeSelect:
-			qexec.execSelect();
+			ResultSet res = qexec.execSelect();
+			if(res==null)
+				return -1;
+			try{
+				ResultSetFormatter.consume(res);
+			}catch(Exception e){
+				log.warning("");
+				LogHandler.writeStackTrace(log, e, Level.WARNING);
+				return -1;
+			}
+//			res.hasNext();
 			break;
 		}
 		long end = Calendar.getInstance().getTimeInMillis();
@@ -215,4 +179,5 @@ public class DetailedWorker extends SparqlWorker implements Runnable {
 
 		return time;
 	}
+	
 }
