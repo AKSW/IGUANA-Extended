@@ -26,6 +26,7 @@ public class DetailedWorker extends SparqlWorker implements Runnable {
     protected void putResults(Integer time, String queryNr){
         //TODO whatever result metrics are needed.
         //This will put the time needed to request the #queryNr query
+    	super.putResults(time, queryNr);
     }
 
     public void setProps(Properties props) {

@@ -1,5 +1,6 @@
 package org.aksw.iguana.extended.testcases;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.Calendar;
 import java.util.Collection;
@@ -13,7 +14,9 @@ import java.util.concurrent.Executors;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.aksw.iguana.benchmark.processor.ResultProcessor;
 import org.aksw.iguana.extended.testcases.workers.DetailedWorker;
+import org.aksw.iguana.testcases.StressTestcase;
 import org.aksw.iguana.testcases.Testcase;
 import org.aksw.iguana.testcases.workers.UpdateFileHandler;
 import org.aksw.iguana.testcases.workers.Worker.LatencyStrategy;
@@ -55,11 +58,11 @@ public class QECacheTestcase implements Testcase {
         // wait time-limit
         waitTimeLimit();
         // getResults
-//		makeResults();
+		makeResults();
 //		//
-//		saveResults();
+		saveResults();
 //		//
-//		cleanMaps();
+		cleanMaps();
 
         //TODO: Save results
 
@@ -67,7 +70,37 @@ public class QECacheTestcase implements Testcase {
         log.info("QECacheTestcase finished");
     }
 
+    
+    protected void saveResults() {
+		for(ResultSet res : results){
+			String fileName = res.getFileName();
+			String[] prefixes = res.getPrefixes();
+			String suffix="";
+			for(String prefix : prefixes){
+				suffix+=prefix+File.separator;
+			}
+			String path = "."+File.separator+
+					ResultProcessor.getTempResultFolder()+
+					File.separator+QECacheTestcase.class.getName().replace(".", "-")+
+					File.separator+suffix;
+			new File(path).mkdirs();
+			res.setFileName(path+fileName);
+			try {
+				res.save();
+			} catch (IOException e) {
+				LogHandler.writeStackTrace(log, e, Level.SEVERE);
+			}
+			res.setFileName(fileName);
+		}
+	}
+    
 
+	private void cleanMaps() {
+		workerPool.clear();
+//		updateWorkerPool.clear();
+	}
+
+    
     private void waitTimeLimit() {
         Calendar start = Calendar.getInstance();
         log.info("Starting QECacheTestcase at: "+CalendarHandler.getFormattedTime(start));
@@ -112,6 +145,15 @@ public class QECacheTestcase implements Testcase {
     }
 
 
+    private void makeResults(){
+		List<List<ResultSet>> sparqlResults = new LinkedList<List<ResultSet>>();
+		for(Integer key : workerPool.keySet()){
+			List<ResultSet> res = (List<ResultSet>) workerPool.get(key).makeResults();
+			sparqlResults.add(res);
+			results.addAll(res);
+		}
+    }
+    
     protected void startWorkers(){
         log.info("Starting Workers");
         //Starting all workers in new threads
