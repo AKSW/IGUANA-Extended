@@ -30,6 +30,7 @@ public class DetailedWorker extends SparqlWorker implements Runnable {
 
 	private static final String DIR_STRING = "DetailedWorker"+UUID.randomUUID().toString();
 	private Properties props;
+	private Boolean cache = true;
 	
 	
 	@Override
@@ -81,10 +82,23 @@ public class DetailedWorker extends SparqlWorker implements Runnable {
 
 	public void setProps(Properties props) {
 		this.props = props;
+	      if(props.getProperty("cache")!=null)
+	        	this.cache = Boolean.valueOf(props.getProperty("cache"));
 	}
 
 	@Override
     protected Integer testQuery(String query){
+		if(cache){
+			return testQueryCached(query);
+		}
+		return testQueryStd(query);
+	}
+	
+	private Integer testQueryStd(String query){
+		return super.testQuery(query);
+	}
+		
+	private Integer testQueryCached(String query){
         waitTime();
         int time=-1;
 
