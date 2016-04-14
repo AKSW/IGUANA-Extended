@@ -19,21 +19,20 @@ import com.ibm.icu.util.Calendar;
 
 public class DetailedWorker extends SparqlWorker implements Runnable {
 
+	private Properties props;
 
-    private Properties props;
+	@Override
+	protected void putResults(Integer time, String queryNr) {
+		// TODO whatever result metrics are needed.
+		// This will put the time needed to request the #queryNr query
+		super.putResults(time, queryNr);
+	}
 
-    @Override
-    protected void putResults(Integer time, String queryNr){
-        //TODO whatever result metrics are needed.
-        //This will put the time needed to request the #queryNr query
-    	super.putResults(time, queryNr);
-    }
+	public void setProps(Properties props) {
+		this.props = props;
+	}
 
-    public void setProps(Properties props) {
-        this.props = props;
-    }
-
-    @Override
+	@Override
     protected Integer testQuery(String query){
         waitTime();
         int time=-1;
@@ -87,10 +86,11 @@ public class DetailedWorker extends SparqlWorker implements Runnable {
         QueryExecution qexec = rawQef.createQueryExecution(q);
         //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 //        Query q = qexec.getQuery();
-        log.info("Testing now "+q.toString());
+        log.info("Testing now "+query);
         int qType=q.getQueryType();//q.getQueryType();
         long start = Calendar.getInstance().getTimeInMillis();
         //TODO if their is something to do with the results
+        try{
         switch(qType){
         case Query.QueryTypeAsk:
             qexec.execAsk();
@@ -105,10 +105,15 @@ public class DetailedWorker extends SparqlWorker implements Runnable {
             qexec.execSelect();
             break;
         }
+        	long end = Calendar.getInstance().getTimeInMillis();
+        	time=Long.valueOf(end-start).intValue();
+        }
+        catch(Exception e){
+        	log.warning("Couldn't execute Query: "+query);
+        	time=-1;
+        }
 
-        long end = Calendar.getInstance().getTimeInMillis();
-        time=Long.valueOf(end-start).intValue();
+        
         return time;
     }
-
 }
