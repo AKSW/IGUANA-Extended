@@ -188,7 +188,7 @@ public class DetailedWorker extends SparqlWorker implements Runnable {
 
 		Query q = null;
 		q = QueryFactory.create(query);
-		QueryExecution qexec = rawQef.createQueryExecution(q);
+		QueryExecution qexec = cachedQef.createQueryExecution(q);
 		// >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 		// Query q = qexec.getQuery();
 		log.info("Testing now " + query);
