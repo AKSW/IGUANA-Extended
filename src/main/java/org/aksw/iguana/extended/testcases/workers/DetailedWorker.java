@@ -1,6 +1,14 @@
 package org.aksw.iguana.extended.testcases.workers;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Map;
 import java.util.Properties;
+import java.util.UUID;
+import java.util.logging.Level;
 
 import org.aksw.iguana.testcases.workers.SparqlWorker;
 import org.aksw.jena_sparql_api.compare.QueryExecutionFactoryCompare;
@@ -14,19 +22,62 @@ import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.Syntax;
+import org.bio_gene.wookie.utils.LogHandler;
 
 import com.ibm.icu.util.Calendar;
 
 public class DetailedWorker extends SparqlWorker implements Runnable {
 
+	private static final String DIR_STRING = "DetailedWorker"+UUID.randomUUID().toString();
 	private Properties props;
-
+	
+	
 	@Override
 	protected void putResults(Integer time, String queryNr) {
 		// TODO whatever result metrics are needed.
 		// This will put the time needed to request the #queryNr query
-		super.putResults(time, queryNr);
+//		super.putResults(time, queryNr);	
+		int oldTime = 0;
+		if (resultMap.containsKey(queryNr)) {
+			oldTime = resultMap.get(queryNr);
+		}
+		File dir = new File(DIR_STRING);
+		dir.mkdir();
+		if (time < 0) {
+			log.warning("Query " + queryNr
+					+ " wasn't successfull for connection "+getConName()+". See logs for more inforamtion");
+			log.warning("This will be saved as failed query");
+			time = 0;
+			inccMap(queryNr, failMap);
+		} else {
+			inccMap(queryNr, succMap);
+		}
+		File f = new File(DIR_STRING+File.separator+queryNr+".det");
+		if(!f.exists()){
+			try {
+				f.createNewFile();
+			} catch (IOException e) {
+				log.severe("Couldn't create file "+f.getAbsolutePath());
+				LogHandler.writeStackTrace(log, e, Level.SEVERE);
+			}
+		}
+		try(PrintWriter pw = new PrintWriter(new FileOutputStream(f, true))){
+			pw.println(time+"");
+		} catch (FileNotFoundException e) {
+			log.severe("Couldn't find file "+f.getAbsolutePath());
+		}
+		
+		resultMap.put(queryNr, oldTime + time);
 	}
+	
+	private void inccMap(String queryNr, Map<String, Integer> map) {
+		int incc = 0;
+		if (map.containsKey(queryNr)) {
+			incc = map.get(queryNr);
+		}
+		map.put(queryNr, incc + 1);
+	}
+
 
 	public void setProps(Properties props) {
 		this.props = props;
@@ -76,13 +127,7 @@ public class DetailedWorker extends SparqlWorker implements Runnable {
 
 
         Query q=null;
-        try{
-            q = QueryFactory.create(query);
-        }
-        catch(Exception e){
-            e.printStackTrace();
-            return -1;
-        }
+        q = QueryFactory.create(query);
         QueryExecution qexec = rawQef.createQueryExecution(q);
         //>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
 //        Query q = qexec.getQuery();
@@ -90,7 +135,7 @@ public class DetailedWorker extends SparqlWorker implements Runnable {
         int qType=q.getQueryType();//q.getQueryType();
         long start = Calendar.getInstance().getTimeInMillis();
         //TODO if their is something to do with the results
-        try{
+
         switch(qType){
         case Query.QueryTypeAsk:
             qexec.execAsk();
@@ -107,11 +152,7 @@ public class DetailedWorker extends SparqlWorker implements Runnable {
         }
         	long end = Calendar.getInstance().getTimeInMillis();
         	time=Long.valueOf(end-start).intValue();
-        }
-        catch(Exception e){
-        	log.warning("Couldn't execute Query: "+query);
-        	time=-1;
-        }
+  
 
         
         return time;
