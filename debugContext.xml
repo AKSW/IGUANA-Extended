@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN" "http://www.springframework.org/dtd/spring-beans-2.0.dtd">
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
+    xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-2.5.xsd">
+
+    <description></description>
+
+    <bean id="" scope="singleton" class="com.jolbox.bonecp.BoneCPDataSource"
+        destroy-method="close">
+        <![CDATA[
+PREFIX lsqv: <http://lsq.aksw.org/vocab#>
+PREFIX sp: <http://spinrdf.org/sp#>
+PREFIX dct:<http://purl.org/dc/terms/>
+SELECT DISTINCT ?id ?query {
+  ?id
+    a sp:Select ; # Can also use other forms
+    sp:text ?query ;
+    lsqv:resultSize ?rs ;
+    lsqv:triplePatterns ?tp;
+    lsqv:bgps ?bgps ;
+    lsqv:execution ?executions .
+
+  ?executions
+    dct:issued  ?time
+
+    FILTER(NOT EXISTS {
+      ?id lsqv:usesFeature ?o
+      FILTER(?o IN (lsqv:Filter, lsqv:Distinct, lsqv:Optional, lsqv:Union))
+    })
+    FILTER (?rs > 0 && ?bgps = 1)
+}
+LIMIT 50
+        ]]>
+
+
+    </bean>
+
+
+</beans>
