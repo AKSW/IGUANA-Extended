@@ -8,6 +8,8 @@ import org.aksw.jena_sparql_api.stmt.SparqlQueryParserImpl
 import org.aksw.jena_sparql_api.utils.transform.F_QueryTransformDatesetDescription
 import org.apache.jena.query.Query
 import org.apache.jena.query.Syntax
+import org.apache.jena.rdf.model.RDFNode
+import org.apache.jena.sparql.core.Var
 
 
 String queryQueryStr = """
@@ -37,7 +39,10 @@ String queryQueryStr = """
 
 SparqlQueryParser queryParser = SparqlQueryParserImpl.create(Syntax.syntaxARQ)
 
-Query lsqQuery = queryParser.apply(queryQueryStr)
+Query queryQuery = queryParser.apply(queryQueryStr)
+queryQuery.setLimit(100)
+
+
 QueryExecutionFactory lsqQef = FluentQueryExecutionFactory
     .http("http://lsq.aksw.org/sparql", "http://dbpedia.org")
     .config()
@@ -46,9 +51,20 @@ QueryExecutionFactory lsqQef = FluentQueryExecutionFactory
     .end()
     .create()
 
-//lsqQef.createQueryExecution(queryQueryStr).execSelect().forEachRemaining(
-//
-//)
+
+// TODO Wrap this ugly part up in some util function
+List<String> queries = new ArrayList<String>()
+List<Var> projectVars = queryQuery.getProjectVars()
+Var queryVar = projectVars.get(0)
+if(queryVar == null) {
+    throw new RuntimeException("At least on query variable expected")
+}
+String queryVarName = "" + queryVar
+lsqQef.createQueryExecution(queryQuery).execSelect().forEachRemaining {
+    RDFNode queryNode = it.get(queryVarName)
+    String queryStr = "" + queryNode;
+    queries.add(queryStr)
+}
 
 
 

@@ -7,14 +7,16 @@ import org.springframework.stereotype.Controller;
 
 @Controller
 public class MainIguanaReborn {
-    // Process:
-    // - Create a list of queries
-    // - Distribute the workload
-    // - Measure the time taken (yield exceptions in case of problems)
-    // - Report the results, deal with exceptions
+    /**
+     * Process:
+     *  - Create a list of queries
+     *  - Distribute the workload
+     *  - Measure the time taken (yield exceptions in case of problems)
+     *  - Report the results, deal with exceptions
+     * @param args
+     */
     public static void main(String[] args) {
         ApplicationContext ctx = SpringApplication.run(new Object[]{ConfigIguanaCore.class, "file:beans.groovy"}, args);
-//        System.out.println(ctx.getBean(String.class));
         System.out.println("Qef: " + ctx.getBean(QueryExecutionFactory.class));
     }
 }
