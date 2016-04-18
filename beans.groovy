@@ -1,5 +1,7 @@
 package org.aksw.iguana
 
+import java.util.concurrent.TimeUnit
+
 import org.aksw.jena_sparql_api.core.FluentQueryExecutionFactory
 import org.aksw.jena_sparql_api.core.QueryExecutionFactory
 import org.aksw.jena_sparql_api.core.QueryExecutionFactoryDecorator
@@ -76,6 +78,7 @@ QueryExecutionFactory dataQef = FluentQueryExecutionFactory
         .withParser(queryParser)
         .withQueryTransform(F_QueryTransformDatesetDescription.fn)
         .withPagination(100000)
+        .withPostProcessor({ it.setTimeout(10, TimeUnit.SECONDS) })
     .end()
     .create()
 

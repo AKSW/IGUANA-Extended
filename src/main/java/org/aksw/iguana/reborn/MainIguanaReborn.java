@@ -1,5 +1,9 @@
 package org.aksw.iguana.reborn;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
+
 import org.aksw.jena_sparql_api.core.QueryExecutionFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
@@ -16,7 +20,9 @@ public class MainIguanaReborn {
      * @param args
      */
     public static void main(String[] args) {
-        ApplicationContext ctx = SpringApplication.run(new Object[]{ConfigIguanaCore.class, "file:beans.groovy"}, args);
+        //Executors.newFixedThreadPool(nThreads)
+        
+        ApplicationContext ctx = SpringApplication.run(new Object[]{"file:beans.groovy", ConfigIguanaCore.class}, args);
         System.out.println("Qef: " + ctx.getBean(QueryExecutionFactory.class));
     }
 }
