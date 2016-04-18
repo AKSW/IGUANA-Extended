@@ -21,7 +21,9 @@ public class MainIguanaReborn {
      */
     public static void main(String[] args) {
         //Executors.newFixedThreadPool(nThreads)
-        
+
+
+
         ApplicationContext ctx = SpringApplication.run(new Object[]{"file:beans.groovy", ConfigIguanaCore.class}, args);
         System.out.println("Qef: " + ctx.getBean(QueryExecutionFactory.class));
     }
