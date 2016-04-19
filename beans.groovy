@@ -1,17 +1,26 @@
 package org.aksw.iguana
 
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
 import java.util.concurrent.TimeUnit
 
+import org.aksw.iguana.reborn.SparqlTaskConsumer
+import org.aksw.iguana.reborn.TaskDispatcher
 import org.aksw.jena_sparql_api.core.FluentQueryExecutionFactory
 import org.aksw.jena_sparql_api.core.QueryExecutionFactory
 import org.aksw.jena_sparql_api.core.QueryExecutionFactoryDecorator
+import org.aksw.jena_sparql_api.core.utils.QueryExecutionUtils
+import org.aksw.jena_sparql_api.delay.extra.DelayerDefault
 import org.aksw.jena_sparql_api.stmt.SparqlQueryParser
 import org.aksw.jena_sparql_api.stmt.SparqlQueryParserImpl
 import org.aksw.jena_sparql_api.utils.transform.F_QueryTransformDatesetDescription
+import org.apache.jena.ext.com.google.common.util.concurrent.MoreExecutors
 import org.apache.jena.query.Query
 import org.apache.jena.query.Syntax
 import org.apache.jena.rdf.model.RDFNode
 import org.apache.jena.sparql.core.Var
+
+import com.google.common.collect.Lists
 
 
 String queryQueryStr = """
@@ -65,10 +74,12 @@ String queryVarName = "" + queryVar
 lsqQef.createQueryExecution(queryQuery).execSelect().forEachRemaining {
     RDFNode queryNode = it.get(queryVarName)
     String queryStr = "" + queryNode;
-    queries.add(queryStr)
+    queries.add(queryStr.replace("\\n", " "))
 }
 
+int workers = 1
 
+List<List<String>> partitions = Lists.partition(queries, workers);
 
 QueryExecutionFactory dataQef = FluentQueryExecutionFactory
     //.from(model)
@@ -81,6 +92,24 @@ QueryExecutionFactory dataQef = FluentQueryExecutionFactory
         .withPostProcessor({ it.setTimeout(10, TimeUnit.SECONDS) })
     .end()
     .create()
+
+ExecutorService executorService = (workers == 1)
+    ? MoreExecutors.newDirectExecutorService()
+    : Executors.newFixedThreadPool(workers)
+    ;
+
+
+// Alternative consumption strategy: QueryExecutionUtils.abortAfterFirstRow
+SparqlTaskConsumer sparqlTaskConsumer = new SparqlTaskConsumer(dataQef, QueryExecutionUtils.&consume);
+
+// Note: delay in ms, should upgrade this class to Java8
+TaskDispatcher taskDispatcher = new TaskDispatcher(queries.iterator(), sparqlTaskConsumer, new DelayerDefault(1000), { task, report -> println("" + task + " - " + report) });
+
+executorService.submit(taskDispatcher)
+
+println("Shutting down executor service")
+executorService.shutdown()
+executorService.awaitTermination(1, TimeUnit.DAYS);
 
 
 beans {
