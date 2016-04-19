@@ -10,6 +10,7 @@ import java.util.stream.Collectors
 import org.aksw.iguana.reborn.SparqlTaskExecutor
 import org.aksw.iguana.reborn.TaskDispatcher
 import org.aksw.jena_sparql_api.compare.QueryExecutionFactoryCompare
+import org.aksw.jena_sparql_api.concept_cache.core.JenaExtensionViewCache;
 import org.aksw.jena_sparql_api.concept_cache.core.OpExecutorFactoryViewCache
 import org.aksw.jena_sparql_api.concept_cache.core.QueryExecutionFactoryViewCacheMaster
 import org.aksw.jena_sparql_api.core.FluentQueryExecutionFactory
@@ -29,7 +30,7 @@ import org.apache.jena.sparql.core.Var
 import com.google.common.collect.Iterables
 
 
-OpExecutorFactoryViewCache.registerGlobally()
+JenaExtensionViewCache.register()
 
 
 String queryQueryStr = """
