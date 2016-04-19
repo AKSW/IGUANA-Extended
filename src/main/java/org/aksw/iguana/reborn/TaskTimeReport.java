@@ -4,7 +4,7 @@ import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 
-public class TaskExecutionReport {
+public class TaskTimeReport {
     /**
      * The time stamp when the task started
      */
@@ -23,7 +23,7 @@ public class TaskExecutionReport {
      */
     protected Exception exception;
 
-    public TaskExecutionReport(Instant startInstant, Duration duration,
+    public TaskTimeReport(Instant startInstant, Duration duration,
             Exception exception) {
         super();
         this.startInstant = startInstant;
@@ -64,7 +64,7 @@ public class TaskExecutionReport {
             return false;
         if (getClass() != obj.getClass())
             return false;
-        TaskExecutionReport other = (TaskExecutionReport) obj;
+        TaskTimeReport other = (TaskTimeReport) obj;
         if (duration == null) {
             if (other.duration != null)
                 return false;

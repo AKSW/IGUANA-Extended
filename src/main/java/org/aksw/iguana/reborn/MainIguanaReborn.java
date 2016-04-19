@@ -23,21 +23,17 @@ public class MainIguanaReborn {
      */
     public static void main(String[] args) throws InterruptedException {
 
-        int workers = 1;
-        ExecutorService executorService = (workers == 1)
-                ? MoreExecutors.newDirectExecutorService()
-                : Executors.newFixedThreadPool(workers)
-                ;
-
-        executorService.submit(() -> { System.out.println("yay"); });
-
-
-        executorService.shutdown();
-        executorService.awaitTermination(1000, TimeUnit.DAYS);
-
-
-
-
+//        int workers = 1;
+//        ExecutorService executorService = (workers == 1)
+//                ? MoreExecutors.newDirectExecutorService()
+//                : Executors.newFixedThreadPool(workers)
+//                ;
+//
+//        executorService.submit(() -> { System.out.println("yay"); });
+//
+//
+//        executorService.shutdown();
+//        executorService.awaitTermination(1000, TimeUnit.DAYS);
         ApplicationContext ctx = SpringApplication.run(new Object[]{"file:beans.groovy", ConfigIguanaCore.class}, args);
         System.out.println("Qef: " + ctx.getBean(QueryExecutionFactory.class));
     }

@@ -77,9 +77,6 @@ lsqQef.createQueryExecution(queryQuery).execSelect().forEachRemaining {
     queries.add(queryStr.replace("\\n", " "))
 }
 
-int workers = 1
-
-List<List<String>> partitions = Lists.partition(queries, workers);
 
 QueryExecutionFactory dataQef = FluentQueryExecutionFactory
     //.from(model)
@@ -89,21 +86,32 @@ QueryExecutionFactory dataQef = FluentQueryExecutionFactory
         .withParser(queryParser)
         .withQueryTransform(F_QueryTransformDatesetDescription.fn)
         .withPagination(100000)
-        .withPostProcessor({ it.setTimeout(10, TimeUnit.SECONDS) })
+        .withPostProcessor({ it.setTimeout(10, TimeUnit.SECONDS) }) // Max 10 seconds execution time per query
     .end()
     .create()
 
-ExecutorService executorService = (workers == 1)
+// TODO Assure value range validity of workers
+int workers = 1
+
+List<List<String>> partitions = Lists.partition(queries, workers);
+
+ExecutorService executorService = workers == 1
     ? MoreExecutors.newDirectExecutorService()
     : Executors.newFixedThreadPool(workers)
     ;
 
 
-// Alternative consumption strategy: QueryExecutionUtils.abortAfterFirstRow
-SparqlTaskConsumer sparqlTaskConsumer = new SparqlTaskConsumer(dataQef, QueryExecutionUtils.&consume);
+// Alternative consumption strategy: QueryExecutionUtils.&abortAfterFirstRow
+// Note: .& is groovy's equivalent to java8's :: - it creates a closure from a method
+SparqlTaskExecutor sparqlTaskExecutor = new SparqlTaskExecutor(dataQef, QueryExecutionUtils.&consume);
 
 // Note: delay in ms, should upgrade this class to Java8
-TaskDispatcher taskDispatcher = new TaskDispatcher(queries.iterator(), sparqlTaskConsumer, new DelayerDefault(1000), { task, report -> println("" + task + " - " + report) });
+TaskDispatcher taskDispatcher =
+    new TaskDispatcher(
+        queries.iterator(),
+        sparqlTaskExecutor,
+        new DelayerDefault(1000), // ms
+        { println("" + it) }); // report callback
 
 executorService.submit(taskDispatcher)
 
@@ -112,6 +120,7 @@ executorService.shutdown()
 executorService.awaitTermination(1, TimeUnit.DAYS);
 
 
+// Actually not needed so far, but here we can pass beans back to the application
 beans {
     qef QueryExecutionFactoryDecorator, dataQef
 }

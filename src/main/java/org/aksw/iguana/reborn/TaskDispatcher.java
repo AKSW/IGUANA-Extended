@@ -10,20 +10,22 @@ import org.aksw.jena_sparql_api.delay.extra.Delayer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class TaskDispatcher<T> implements Runnable {
+public class TaskDispatcher<T, E>
+    implements Runnable
+{
 
     private static final Logger logger = LoggerFactory.getLogger(TaskDispatcher.class);
 
     protected Iterator<T> taskSource;
-    protected Consumer<T> taskConsumer;
+    protected BiConsumer<T, Consumer<? super E>> taskConsumer;
     protected Delayer delayer;
-    protected BiConsumer<T, TaskExecutionReport> reportConsumer;
+    protected Consumer<DefaultTaskReport<T, TaskTimeReport, E>> reportConsumer;
 
     public TaskDispatcher(
             Iterator<T> taskSource,
-            Consumer<T> taskConsumer,
+            BiConsumer<T, Consumer<? super E>> taskConsumer,
             Delayer delayer,
-            BiConsumer<T, TaskExecutionReport> reportConsumer
+            Consumer<DefaultTaskReport<T, TaskTimeReport, E>> reportConsumer
             ) {
         super();
         this.taskSource = taskSource;
@@ -43,19 +45,24 @@ public class TaskDispatcher<T> implements Runnable {
 
                 Instant startInstant = Instant.now();
                 Exception ex = null;
+
+                Holder<E> executorReportHolder = new Holder<>();
                 try {
-                    taskConsumer.accept(task);
+                    taskConsumer.accept(task, (e) -> { executorReportHolder.setValue(e); });
                 } catch(Exception e) {
                     ex = e;
                     logger.warn("Reporting failed task execution", e);
                 }
+
                 Instant endInstant = Instant.now();
                 Duration duration = Duration.between(startInstant, endInstant);
 
-                TaskExecutionReport report = new TaskExecutionReport(startInstant, duration, ex);
+                TaskTimeReport dispatcherReport = new TaskTimeReport(startInstant, duration, ex);
+                E executorReport = executorReportHolder.getValue();
+                DefaultTaskReport<T, TaskTimeReport, E> fullReport = new DefaultTaskReport<>(task, dispatcherReport, executorReport);
 
                 try {
-                    reportConsumer.accept(task, report);
+                    reportConsumer.accept(fullReport);
                 } catch(Exception e) {
                     logger.error("Failed to send report to consumer", e);
                     throw new RuntimeException(e);
