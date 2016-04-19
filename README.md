@@ -1,8 +1,10 @@
 # IGUANA-Extended
 
 The [Iguana task runner](src/main/java/org/aksw/iguana/reborn/MainIguanaReborn.java) is now configured with SpringBoot, which allows one to use XML, Java, JSON, YAML and Groovy for configuration purposes. Because of [jena-sparql-api](https://github.com/AKSW/jena-sparql-api)'s fluent API, groovy is probably the most concise choice.
+See the [example work-in-progress config file](beans.groovy) for basic usage. The intention is to reduce the configuration boilerplate by making parts of the execution process more rigid and by providing appropriate utility functions.
 
-The high level model is pretty straight forward, and comprises these entities:
+
+The high level model is pretty straight forward and comprises the following entities:
 
 * [TaskDispatcher](src/main/java/org/aksw/iguana/reborn/TaskDispatcher.java): This class takes an iterator of tasks and passes them sequentially to a task executor. The delay strategy is configurable. Upon completed execution (regardless of sucess or failure) a report is generated and passed on to a consumer. This class only measures the time spent on the task execution and handles execptions.
 * The task dispatcher can be simply submitted to an [ExecutorService](https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/ExecutorService.html).
