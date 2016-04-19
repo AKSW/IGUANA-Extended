@@ -1,11 +1,8 @@
 package org.aksw.iguana.reborn;
 
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.List;
 
 import org.aksw.jena_sparql_api.core.QueryExecutionFactory;
-import org.apache.jena.ext.com.google.common.util.concurrent.MoreExecutors;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;

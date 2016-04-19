@@ -1,15 +1,17 @@
 package org.aksw.iguana
 
+import java.util.concurrent.Callable
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
+import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
+import java.util.stream.Collectors
 
 import org.aksw.iguana.reborn.SparqlTaskExecutor
 import org.aksw.iguana.reborn.TaskDispatcher
 import org.aksw.jena_sparql_api.compare.QueryExecutionFactoryCompare
 import org.aksw.jena_sparql_api.concept_cache.core.OpExecutorFactoryViewCache
 import org.aksw.jena_sparql_api.concept_cache.core.QueryExecutionFactoryViewCacheMaster
-import org.aksw.jena_sparql_api.concept_cache.main.MainSparqlViewCache
 import org.aksw.jena_sparql_api.core.FluentQueryExecutionFactory
 import org.aksw.jena_sparql_api.core.QueryExecutionFactory
 import org.aksw.jena_sparql_api.core.QueryExecutionFactoryDecorator
@@ -98,21 +100,20 @@ lsqQef.createQueryExecution(queryQuery).execSelect().forEachRemaining {
 //    .create()
 
 
-    QueryExecutionFactory rawQef = FluentQueryExecutionFactory
-    //.from(model)
-    .http("http://akswnc3.informatik.uni-leipzig.de/data/dbpedia/sparql", "http://dbpedia.org")
-    //.http("http://localhost:8890/sparql", "http://dbpedia.org")
-    .config()
-        .withParser(SparqlQueryParserImpl.create(Syntax.syntaxARQ))
-        .withQueryTransform(F_QueryTransformDatesetDescription.fn)
-        .withPagination(100000)
-    .end()
-    .create()
+QueryExecutionFactory rawQef = FluentQueryExecutionFactory
+//.from(model)
+.http("http://akswnc3.informatik.uni-leipzig.de/data/dbpedia/sparql", "http://dbpedia.org")
+//.http("http://localhost:8890/sparql", "http://dbpedia.org")
+.config()
+    .withParser(SparqlQueryParserImpl.create(Syntax.syntaxARQ))
+    .withQueryTransform(F_QueryTransformDatesetDescription.fn)
+    .withPagination(100000)
+.end()
+.create()
 
 
-    MainSparqlViewCache cache = new MainSparqlViewCache(rawQef)
-    QueryExecutionFactory cachedQef = new QueryExecutionFactoryViewCacheMaster(rawQef, OpExecutorFactoryViewCache.get().getServiceMap())
-    QueryExecutionFactory dataQef = new QueryExecutionFactoryCompare(rawQef, cachedQef)
+QueryExecutionFactory cachedQef = new QueryExecutionFactoryViewCacheMaster(rawQef, OpExecutorFactoryViewCache.get().getServiceMap())
+QueryExecutionFactory dataQef = new QueryExecutionFactoryCompare(rawQef, cachedQef)
 
 
 
@@ -141,11 +142,24 @@ TaskDispatcher taskDispatcher =
         new DelayerDefault(1000), // ms
         { println("" + it) }) // report callback
 
-executorService.submit(taskDispatcher)
+
+List<Runnable<?>> runnables = Collections.singletonList(taskDispatcher);
+
+List<Callable<?>> callables = runnables.stream().map({c -> Executors.callable(c)}).collect(Collectors.toList())
+
+List<Future<?>> futures = executorService.invokeAll(callables)
 
 println("Shutting down executor service")
 executorService.shutdown()
 executorService.awaitTermination(1, TimeUnit.DAYS)
+
+for(Future<?> future : futures) {
+    try {
+        future.get()
+    } catch(Exception ex) {
+        ex.printStackTrace()
+    }
+}
 
 
 // Actually not needed so far, but here we can pass beans back to the application
