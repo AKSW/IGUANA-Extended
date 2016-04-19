@@ -26,7 +26,7 @@ import org.apache.jena.query.Syntax
 import org.apache.jena.rdf.model.RDFNode
 import org.apache.jena.sparql.core.Var
 
-import com.google.common.collect.Lists
+import com.google.common.collect.Iterables
 
 
 OpExecutorFactoryViewCache.registerGlobally()
@@ -60,7 +60,8 @@ String queryQueryStr = """
 SparqlQueryParser queryParser = SparqlQueryParserImpl.create(Syntax.syntaxARQ)
 
 Query queryQuery = queryParser.apply(queryQueryStr)
-queryQuery.setLimit(100)
+//queryQuery.setOffset(10)
+queryQuery.setLimit(50)
 
 
 QueryExecutionFactory lsqQef = FluentQueryExecutionFactory
@@ -86,6 +87,8 @@ lsqQef.createQueryExecution(queryQuery).execSelect().forEachRemaining {
     queries.add(queryStr.replace("\\n", " "))
 }
 
+
+Iterable<Query> tasks = Iterables.concat(queries, queries, queries)
 
 //QueryExecutionFactory dataQef = FluentQueryExecutionFactory
 //    //.from(model)
@@ -122,7 +125,11 @@ QueryExecutionFactory dataQef = new QueryExecutionFactoryCompare(rawQef, cachedQ
 // TODO Assure value range validity of workers
 int workers = 1
 
-List<List<String>> partitions = Lists.partition(queries, workers)
+//List<List<String>> partitions = Lists.partition(queries, workers)
+
+//Random rand = new Random();
+//List<String> subList = queries.subList(rand.nextInt());
+//partitions.add(subList);
 
 ExecutorService executorService = (workers == 1
     ? MoreExecutors.newDirectExecutorService()
@@ -137,15 +144,15 @@ SparqlTaskExecutor sparqlTaskExecutor = new SparqlTaskExecutor(dataQef, QueryExe
 // Note: delay in ms, should upgrade this class to Java8
 TaskDispatcher taskDispatcher =
     new TaskDispatcher(
-        queries.iterator(),
+        tasks.iterator(),
         sparqlTaskExecutor,
-        new DelayerDefault(1000), // ms
+        new DelayerDefault(0), // ms
         { println("" + it) }) // report callback
 
 
 List<Runnable<?>> runnables = Collections.singletonList(taskDispatcher);
 
-List<Callable<?>> callables = runnables.stream().map({c -> Executors.callable(c)}).collect(Collectors.toList())
+List<Callable<?>> callables = runnables.stream().map({r -> Executors.callable(r)}).collect(Collectors.toList())
 
 List<Future<?>> futures = executorService.invokeAll(callables)
 
@@ -165,5 +172,6 @@ for(Future<?> future : futures) {
 // Actually not needed so far, but here we can pass beans back to the application
 beans {
     qef QueryExecutionFactoryDecorator, dataQef
+    myString String, "hello world"
 }
 

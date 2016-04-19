@@ -3,12 +3,32 @@ package org.aksw.iguana.reborn;
 import java.util.List;
 
 import org.aksw.jena_sparql_api.core.QueryExecutionFactory;
+import org.apache.jena.ext.com.google.common.collect.Iterables;
+import org.apache.jena.sparql.algebra.optimize.Optimize;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 
 @Controller
 public class MainIguanaReborn {
+
+    public static <T> Iterable<T> rotate(List<T> list, int distance) {
+        int n = list.size();
+
+        Iterable<T> result;
+        if(n == 0)  {
+            result = list;
+        } else {
+            distance = distance % n;
+
+            List<T> partA = list.subList(distance, n - distance);
+            List<T> partB = list.subList(0, distance);
+            result = Iterables.concat(partA, partB);
+        }
+
+        return result;
+    }
+
     /**
      * Process:
      *  - Create a list of queries
