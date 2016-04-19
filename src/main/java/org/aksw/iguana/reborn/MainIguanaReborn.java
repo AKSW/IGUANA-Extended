@@ -34,7 +34,7 @@ public class MainIguanaReborn {
 //
 //        executorService.shutdown();
 //        executorService.awaitTermination(1000, TimeUnit.DAYS);
-        ApplicationContext ctx = SpringApplication.run(new Object[]{"file:beans.groovy", ConfigIguanaCore.class}, args);
+        ApplicationContext ctx = SpringApplication.run(new Object[]{"file:cache.groovy", ConfigIguanaCore.class}, args);
         System.out.println("Qef: " + ctx.getBean(QueryExecutionFactory.class));
     }
 }
