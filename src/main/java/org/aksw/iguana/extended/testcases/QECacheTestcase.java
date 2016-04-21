@@ -251,6 +251,9 @@ public class QECacheTestcase implements Testcase {
         if(p.contains("pagination")){
         	pagination = Integer.valueOf(p.getProperty("pagination"));
         }
+        if(p.contains("worker")){
+        	this.workers=Integer.valueOf(p.getProperty("worker"));
+        }
         
     }
 
