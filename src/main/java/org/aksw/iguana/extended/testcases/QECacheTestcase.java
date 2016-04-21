@@ -55,6 +55,7 @@ public class QECacheTestcase implements Testcase {
     private long timeLimit;
     private Properties prop;
 	private int pagination=100000;
+	private boolean cache;
 	
 
     @Override
@@ -210,8 +211,8 @@ public class QECacheTestcase implements Testcase {
         QueryExecutionFactory cachedQef = new QueryExecutionFactoryViewCacheMaster(
                 rawQef, OpExecutorFactoryViewCache.get().getServiceMap());
 
-        QueryExecutionFactory mainQef = new QueryExecutionFactoryCompare(
-                rawQef, cachedQef);
+//        QueryExecutionFactory mainQef = new QueryExecutionFactoryCompare(
+//                rawQef, cachedQef);
 		
         for(int i=0;i<workers;i++){
             DetailedWorker worker = new DetailedWorker();
@@ -224,7 +225,10 @@ public class QECacheTestcase implements Testcase {
     		worker.setConName(conName);
             worker.setConnection(con);
             worker.setWorkerNr(i);
-            worker.setQef(mainQef);
+            if(cache)
+            	worker.setQef(cachedQef);
+            else
+            	worker.setQef(rawQef);
             worker.setProps(prop);
             worker.init(i);
             workerPool.put(i, worker);
@@ -254,6 +258,8 @@ public class QECacheTestcase implements Testcase {
         if(p.contains("worker")){
         	this.workers=Integer.valueOf(p.getProperty("worker"));
         }
+        if (p.getProperty("cache") != null)
+            this.cache = Boolean.valueOf(p.getProperty("cache"));
         
     }
 
