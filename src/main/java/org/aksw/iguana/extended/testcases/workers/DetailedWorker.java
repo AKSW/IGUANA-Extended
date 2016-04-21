@@ -32,14 +32,13 @@ import org.bio_gene.wookie.utils.LogHandler;
 
 public class DetailedWorker extends SparqlWorker implements Runnable {
 
-    static {
-        OpExecutorFactoryViewCache.registerGlobally();
-    }
+
 
     private static final String DIR_STRING = "DetailedWorker"
             + UUID.randomUUID().toString();
     private Properties props;
     private Boolean cache = true;
+	private QueryExecutionFactory mainQef;
 
     @Override
     protected void putResults(Integer time, String queryNr) {
@@ -50,8 +49,8 @@ public class DetailedWorker extends SparqlWorker implements Runnable {
         if (resultMap.containsKey(queryNr)) {
             oldTime = resultMap.get(queryNr);
         }
-        File dir = new File(DIR_STRING);
-        dir.mkdir();
+//        File dir = new File(DIR_STRING);
+//        dir.mkdir();
         if (time < 0) {
             log.warning("Query " + queryNr
                     + " wasn't successfull for connection " + getConName()
@@ -62,20 +61,20 @@ public class DetailedWorker extends SparqlWorker implements Runnable {
         } else {
             inccMap(queryNr, succMap);
         }
-        File f = new File(DIR_STRING + File.separator + queryNr + ".det");
-        if (!f.exists()) {
-            try {
-                f.createNewFile();
-            } catch (IOException e) {
-                log.severe("Couldn't create file " + f.getAbsolutePath());
-                LogHandler.writeStackTrace(log, e, Level.SEVERE);
-            }
-        }
-        try (PrintWriter pw = new PrintWriter(new FileOutputStream(f, true))) {
-            pw.println(time + "");
-        } catch (FileNotFoundException e) {
-            log.severe("Couldn't find file " + f.getAbsolutePath());
-        }
+//        File f = new File(DIR_STRING + File.separator + queryNr + ".det");
+//        if (!f.exists()) {
+//            try {
+//                f.createNewFile();
+//            } catch (IOException e) {
+//                log.severe("Couldn't create file " + f.getAbsolutePath());
+//                LogHandler.writeStackTrace(log, e, Level.SEVERE);
+//            }
+//        }
+//        try (PrintWriter pw = new PrintWriter(new FileOutputStream(f, true))) {
+//            pw.println(time + "");
+//        } catch (FileNotFoundException e) {
+//            log.severe("Couldn't find file " + f.getAbsolutePath());
+//        }
 
         resultMap.put(queryNr, oldTime + time);
     }
@@ -96,61 +95,44 @@ public class DetailedWorker extends SparqlWorker implements Runnable {
 
     @Override
     protected Integer testQuery(String query) {
-        if (cache) {
-            return testQueryCached(query);
-        }
-        return testQueryStd(query);
+         return testQueryCached(query);
+
     }
 
-    private Integer testQueryStd(String query) {
-        waitTime();
-        int time = -1;
-
-        QueryExecutionFactory rawQef = FluentQueryExecutionFactory
-                .http("http://akswnc3.informatik.uni-leipzig.de/data/dbpedia/sparql",
-                        "http://dbpedia.org")
-                .config()
-                    .withParser(SparqlQueryParserImpl.create(Syntax.syntaxARQ))
-                    .withQueryTransform(F_QueryTransformDatesetDescription.fn)
-                    .withPagination(100000)
-                    .withPostProcessor(qe -> qe.setTimeout(3, TimeUnit.SECONDS))
-                .end()
-                .create();
-
-        Query q = null;
-        q = QueryFactory.create(query);
-        QueryExecution qexec = rawQef.createQueryExecution(q);
-        // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
-        // Query q = qexec.getQuery();
-        log.info("Testing now " + query);
-        return testQueryQE(q, qexec);
-    }
+//    private Integer testQueryStd(String query) {
+//        waitTime();
+//        int time = -1;
+//
+//        QueryExecutionFactory rawQef = FluentQueryExecutionFactory
+//                .http("http://akswnc3.informatik.uni-leipzig.de/data/dbpedia/sparql",
+//                        "http://dbpedia.org")
+//                .config()
+//                    .withParser(SparqlQueryParserImpl.create(Syntax.syntaxARQ))
+//                    .withQueryTransform(F_QueryTransformDatesetDescription.fn)
+//                    .withPagination(100000)
+//                    .withPostProcessor(qe -> qe.setTimeout(3, TimeUnit.SECONDS))
+//                .end()
+//                .create();
+//
+//        Query q = null;
+//        q = QueryFactory.create(query);
+//        QueryExecution qexec = rawQef.createQueryExecution(q);
+//        // >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+//        // Query q = qexec.getQuery();
+//        log.info("Testing now " + query);
+//        return testQueryQE(q, qexec);
+//    }
 
     private Integer testQueryCached(String query) {
         waitTime();
         int time = -1;
 
-        QueryExecutionFactory rawQef = FluentQueryExecutionFactory
-                .http("http://akswnc3.informatik.uni-leipzig.de/data/dbpedia/sparql", "http://dbpedia.org")
-                .config()
-                    .withParser(SparqlQueryParserImpl.create(Syntax.syntaxARQ))
-                    .withQueryTransform(F_QueryTransformDatesetDescription.fn)
-                    .withPagination(100000)
-                    .withPostProcessor(qe -> qe.setTimeout(3, TimeUnit.SECONDS))
-                .end()
-                .create();
-
-
-        QueryExecutionFactory cachedQef = new QueryExecutionFactoryViewCacheMaster(
-                rawQef, OpExecutorFactoryViewCache.get().getServiceMap());
-
-        QueryExecutionFactory mainQef = new QueryExecutionFactoryCompare(
-                rawQef, cachedQef);
+        
 
         //Query q = null;
         //q = QueryFactory.create(query);
         QueryExecution qexec = mainQef.createQueryExecution(query);
-
+        qexec.setTimeout(180000);
         log.info("Testing now " + query);
         return testQueryQE(qexec.getQuery(), qexec);
     }
@@ -158,7 +140,7 @@ public class DetailedWorker extends SparqlWorker implements Runnable {
     private Integer testQueryQE(Query q, QueryExecution qexec){
         int qType = q.getQueryType();// q.getQueryType();
         long start = Calendar.getInstance().getTimeInMillis();
-        // TODO if their is something to do with the results
+        // TODO !!! get   both times for mainQEF run
         Integer time=-1;
         switch (qType) {
         case Query.QueryTypeAsk:
@@ -189,5 +171,9 @@ public class DetailedWorker extends SparqlWorker implements Runnable {
 
         return time;
     }
+
+	public void setQef(QueryExecutionFactory mainQef) {
+		this.mainQef = mainQef;		
+	}
 
 }

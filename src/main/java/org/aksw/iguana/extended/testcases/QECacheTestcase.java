@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,12 +24,24 @@ import org.aksw.iguana.testcases.workers.Worker.LatencyStrategy;
 import org.aksw.iguana.utils.CalendarHandler;
 import org.aksw.iguana.utils.ResultSet;
 import org.aksw.iguana.utils.TimeOutException;
+import org.aksw.jena_sparql_api.compare.QueryExecutionFactoryCompare;
+import org.aksw.jena_sparql_api.concept_cache.core.OpExecutorFactoryViewCache;
+import org.aksw.jena_sparql_api.concept_cache.core.QueryExecutionFactoryViewCacheMaster;
+import org.aksw.jena_sparql_api.core.FluentQueryExecutionFactory;
+import org.aksw.jena_sparql_api.core.QueryExecutionFactory;
+import org.aksw.jena_sparql_api.stmt.SparqlQueryParserImpl;
+import org.aksw.jena_sparql_api.utils.transform.F_QueryTransformDatesetDescription;
+import org.apache.jena.query.Syntax;
 import org.bio_gene.wookie.connection.Connection;
 import org.bio_gene.wookie.utils.LogHandler;
 import org.w3c.dom.Node;
 
 public class QECacheTestcase implements Testcase {
 
+    static {
+        OpExecutorFactoryViewCache.registerGlobally();
+    }
+	
     private Collection<ResultSet> results = new LinkedList<ResultSet>();
     private Connection con;
     private String conName;
@@ -41,6 +54,8 @@ public class QECacheTestcase implements Testcase {
     private Map<Integer, DetailedWorker> workerPool = new HashMap<Integer, DetailedWorker>();
     private long timeLimit;
     private Properties prop;
+	private int pagination=100000;
+	
 
     @Override
     public void start() throws IOException {
@@ -181,7 +196,22 @@ public class QECacheTestcase implements Testcase {
 		List<LatencyStrategy> latencyStrategy=new LinkedList<LatencyStrategy>();
 		List<Integer[]> latencyAmount = new LinkedList<Integer[]>();
 		
+		QueryExecutionFactory rawQef = FluentQueryExecutionFactory
+                .http("http://akswnc3.informatik.uni-leipzig.de/data/dbpedia/sparql", "http://dbpedia.org")
+                .config()
+                    .withParser(SparqlQueryParserImpl.create(Syntax.syntaxARQ))
+                    .withQueryTransform(F_QueryTransformDatesetDescription.fn)
+                    .withPagination(pagination)
+                    .withPostProcessor(qe -> qe.setTimeout(3, TimeUnit.SECONDS))
+                .end()
+                .create();
 
+
+        QueryExecutionFactory cachedQef = new QueryExecutionFactoryViewCacheMaster(
+                rawQef, OpExecutorFactoryViewCache.get().getServiceMap());
+
+        QueryExecutionFactory mainQef = new QueryExecutionFactoryCompare(
+                rawQef, cachedQef);
 		
         for(int i=0;i<workers;i++){
             DetailedWorker worker = new DetailedWorker();
@@ -194,6 +224,7 @@ public class QECacheTestcase implements Testcase {
     		worker.setConName(conName);
             worker.setConnection(con);
             worker.setWorkerNr(i);
+            worker.setQef(mainQef);
             worker.setProps(prop);
             worker.init(i);
             workerPool.put(i, worker);
@@ -217,7 +248,10 @@ public class QECacheTestcase implements Testcase {
     public void setProperties(Properties p) {
         this.prop = p;
         this.timeLimit = Long.valueOf(p.getProperty("timeLimit"));
-
+        if(p.contains("pagination")){
+        	pagination = Integer.valueOf(p.getProperty("pagination"));
+        }
+        
     }
 
     @Override
