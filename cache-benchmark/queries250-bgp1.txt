@@ -1,0 +1,250 @@
+SELECT ?value WHERE { <http://dbpedia.org/resource/Dayton_State_Park> <http://dbpedia.org/property/reference> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Category:Public_universities_in_the_United_Arab_Emirates> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?value . }
+SELECT  ?classes WHERE   { <http://dbpedia.org/resource/Cyril_Connolly>               <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?classes .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/Georgia_State_Route_231> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Category:Franks> <http://www.w3.org/2000/01/rdf-schema#label> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Leavenworth_Township%2C_Brown_County%2C_Minnesota> <http://dbpedia.org/property/officialName> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Category:Presidential_Medal_of_Freedom_recipients> <http://www.w3.org/2000/01/rdf-schema#label> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Julia_Weldon> <http://xmlns.com/foaf/0.1/page> ?value . }
+SELECT  ?classes WHERE   { <http://dbpedia.org/resource/R%C3%A9veil-Sportif>               <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?classes .   } 
+SELECT  ?classes WHERE   { <http://dbpedia.org/resource/Old_National_Bank>               <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?classes .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/Lee_Township%2C_Beltrami_County%2C_Minnesota> <http://dbpedia.org/property/longs> ?value . }
+PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>  SELECT  * WHERE   { <http://dbpedia.org/resource/Anthony_J._Celebrezze_Jr.>               rdfs:label  ?labels .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/Category:Long_Island_highways> <http://www.w3.org/2004/02/skos/core#prefLabel> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Citronelle%2C_Alabama> <http://dbpedia.org/property/areaLandKm> ?value . }
+PREFIX  dc:   <http://purl.org/dc/elements/1.1/> PREFIX  :     <http://dbpedia.org/resource/> PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#> PREFIX  dbpedia2: <http://dbpedia.org/property/> PREFIX  foaf: <http://xmlns.com/foaf/0.1/> PREFIX  owl:  <http://www.w3.org/2002/07/owl#> PREFIX  xsd:  <http://www.w3.org/2001/XMLSchema#> PREFIX  dbpedia: <http://dbpedia.org/> PREFIX  rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX  skos: <http://www.w3.org/2004/02/skos/core#>  SELECT  ?p ?o WHERE   { :Ara_Tiotio  ?p  ?o .} 
+SELECT ?value WHERE { <http://dbpedia.org/resource/Cedar_Grove%2C_New_Jersey> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/East_Cameron_Township%2C_Northumberland_County%2C_Pennsylvania> <http://dbpedia.org/property/officialName> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Category:History_of_education> <http://www.w3.org/2004/02/skos/core#broader> ?value . }
+SELECT ?value WHERE { ?value <http://www.w3.org/2000/01/rdf-schema#label> 'Transportation in Baltimore, Maryland'@en . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Delta_Chi> <http://xmlns.com/foaf/0.1/page> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Natshinnaung> <http://dbpedia.org/property/title> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Nokomis%2C_Florida> <http://xmlns.com/foaf/0.1/name> ?value . }
+SELECT  ?classes WHERE   { <http://dbpedia.org/resource/Crossroads_Charter_Academy>               <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?classes .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/List_of_counties_in_Kansas> <http://dbpedia.org/property/seat> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Category:Cities%2C_towns_and_villages_in_Ismailli_Rayon> <http://www.w3.org/2004/02/skos/core#prefLabel> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Heald_Green_railway_station> <http://xmlns.com/foaf/0.1/page> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Cylon%2C_Wisconsin> <http://www.w3.org/2000/01/rdf-schema#label> ?value . }
+SELECT  ?classes WHERE   { <http://dbpedia.org/resource/ANT1_Gold>               <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?classes .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/Tulane_Stadium> <http://xmlns.com/foaf/0.1/page> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Republica> <http://xmlns.com/foaf/0.1/page> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/The_Prince_Charles_Hospital> <http://www.georss.org/georss/point> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Heysel_Park> <http://www.w3.org/2003/01/geo/wgs84_pos#long> ?value . }
+PREFIX  skos: <http://www.w3.org/2004/02/skos/core#>  SELECT  * WHERE   { ?resource  skos:subject  <http://dbpedia.org/resource/Category:American_astronomers> .} 
+SELECT ?value WHERE { ?value <http://dbpedia.org/property/reference> <http://www.oracle.com/technology/products/forms/index.html> . }
+SELECT  ?classes WHERE   { <http://dbpedia.org/resource/Manshead_Upper_School>               <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?classes .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/TSR%2C_Inc.> <http://xmlns.com/foaf/0.1/page> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Harvard_Stadium> <http://www.georss.org/georss/point> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Ralph_Bakshi> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?value . }
+SELECT  ?classes WHERE   { <http://dbpedia.org/resource/Camden_High_School_%28Camden%2C_New_York%29>               <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?classes .   } 
+SELECT  ?classes WHERE   { <http://dbpedia.org/resource/Recycled_Paper_Greetings>               <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?classes .   } 
+PREFIX  skos: <http://www.w3.org/2004/02/skos/core#>  SELECT  * WHERE   { <http://dbpedia.org/resource/Chris_Evert>               skos:subject  ?category .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/Maxwell%27s_Silver_Hammer> <http://xmlns.com/foaf/0.1/name> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/John_Phillip_Law> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Andrych%C3%B3w> <http://dbpedia.org/property/latns> ?value . }
+SELECT ?value WHERE { ?value <http://dbpedia.org/property/after> <http://dbpedia.org/resource/St._Pete_Times_Forum> . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Paul_Healey> <http://www.w3.org/2004/02/skos/core#subject> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Total_Axxess> <http://www.w3.org/2000/01/rdf-schema#label> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Salamatof%2C_Alaska> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Achor> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Longboat_Key%2C_Florida> <http://dbpedia.org/property/utcOffset> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Piano_Concerto_No._3_%28Rachmaninoff%29> <http://dbpedia.org/property/reference> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Fairgrove_Township%2C_Michigan> <http://dbpedia.org/property/subdivisionName> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Hims> <http://xmlns.com/foaf/0.1/depiction> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Tagaung%2C_Mandalay> <http://dbpedia.org/property/pushpinMap> ?value . }
+PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>  SELECT  * WHERE   { <http://dbpedia.org/resource/Belgrade_Nikola_Tesla_Airport>               rdfs:label  ?labels .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/Category:Subdivisions_of_Hungary> <http://www.w3.org/2004/02/skos/core#prefLabel> ?value . }
+SELECT  ?classes WHERE   { <http://dbpedia.org/resource/CAL_Cargo_Air_Lines>               <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?classes .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/Carthage%2C_Maine> <http://dbpedia.org/property/lats> ?value . }
+SELECT  ?classes WHERE   { <http://dbpedia.org/resource/Cristiano_Lucarelli>               <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?classes .   } 
+SELECT ?value WHERE { ?value <http://www.w3.org/2004/02/skos/core#subject> <http://dbpedia.org/resource/Category:Vancouver_Canucks> . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Daniel_Passarella> <http://dbpedia.org/property/before> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/D-amino-acid_transaminase> <http://www.w3.org/2004/02/skos/core#subject> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/List_of_counties_in_South_Dakota> <http://dbpedia.org/property/num> ?value . }
+SELECT  * WHERE   { ?name  <http://www.w3.org/2000/01/rdf-schema#label>  'Kurt Campbell'@en ;            <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?type .   } 
+PREFIX  rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>  SELECT  * WHERE   { <http://dbpedia.org/resource/Once_in_a_Lifetime_%28Keith_Urban_song%29>               rdf:type  ?labels .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/2007_Canadian_Grand_Prix> <http://xmlns.com/foaf/0.1/page> ?value . }
+PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#> PREFIX  geo:  <http://www.w3.org/2003/01/geo/wgs84_pos#> PREFIX  foaf: <http://xmlns.com/foaf/0.1/> PREFIX  yago: <http://dbpedia.org/class/yago/> PREFIX  p:    <http://dbpedia.org/property/> PREFIX  rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX  skos: <http://www.w3.org/2004/02/skos/core#>  SELECT  * WHERE   { <http://dbpedia.org/resource/Calandrella>               skos:subject  ?category .   } 
+SELECT  ?classes WHERE   { <http://dbpedia.org/resource/SV_Juventus>               <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?classes .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/Grey-winged_Trumpeter> <http://xmlns.com/foaf/0.1/name> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Nafisa_Joseph> <http://xmlns.com/foaf/0.1/givenname> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Atago_Green_Hills> <http://www.georss.org/georss/point> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Binghamton%2C_New_York> <http://xmlns.com/foaf/0.1/depiction> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Lime_Township%2C_Blue_Earth_County%2C_Minnesota> <http://dbpedia.org/property/blank1Info> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Martin%2C_Slovakia> <http://dbpedia.org/property/febHi_percent_C2_percent_B0c> ?value . }
+SELECT  * WHERE   { ?name  <http://www.w3.org/2000/01/rdf-schema#label>  'Erin Andrews'@en ;            <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?type .   } 
+SELECT  ?classes WHERE   { <http://dbpedia.org/resource/Hambleden>               <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?classes .   } 
+PREFIX  dc:   <http://purl.org/dc/elements/1.1/> PREFIX  :     <http://dbpedia.org/resource/> PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#> PREFIX  dbpedia2: <http://dbpedia.org/property/> PREFIX  foaf: <http://xmlns.com/foaf/0.1/> PREFIX  owl:  <http://www.w3.org/2002/07/owl#> PREFIX  xsd:  <http://www.w3.org/2001/XMLSchema#> PREFIX  dbpedia: <http://dbpedia.org/> PREFIX  rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX  skos: <http://www.w3.org/2004/02/skos/core#>  SELECT  ?p ?o WHERE   { :Oti_River  ?p  ?o .} 
+SELECT  ?classes WHERE   { <http://dbpedia.org/resource/L%C3%A4%C3%A4z_Rockit>               <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?classes .   } 
+PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>  SELECT  ?label WHERE   { <http://dbpedia.org/resource/Control_flow>               rdfs:label  ?label .   } 
+SELECT ?value WHERE { ?value <http://dbpedia.org/property/data> <http://dbpedia.org/resource/James_Madison> . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Lehi%2C_Utah> <http://dbpedia.org/property/website> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Category:Dutch_Jews> <http://www.w3.org/2000/01/rdf-schema#label> ?value . }
+PREFIX  skos: <http://www.w3.org/2004/02/skos/core#>  SELECT  * WHERE   { ?resource  skos:subject  <http://dbpedia.org/resource/Category:Singaporean_historians> .} 
+SELECT ?value WHERE { <http://dbpedia.org/resource/Category:Swimmers_at_the_1928_Summer_Olympics> <http://www.w3.org/2004/02/skos/core#broader> ?value . }
+SELECT  ?classes WHERE   { <http://dbpedia.org/resource/Comet_Gain>               <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?classes .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/Frankton%2C_Indiana> <http://dbpedia.org/property/elevationM> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/West_Samoset%2C_Florida> <http://dbpedia.org/property/unitPref> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Category:Japanese_architects> <http://www.w3.org/2004/02/skos/core#broader> ?value . }
+PREFIX  skos: <http://www.w3.org/2004/02/skos/core#>  SELECT  * WHERE   { <http://dbpedia.org/resource/Category:Slovak_National_Uprising>               skos:broader  ?category .   } 
+PREFIX  dc:   <http://purl.org/dc/elements/1.1/> PREFIX  :     <http://dbpedia.org/resource/> PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#> PREFIX  dbpedia2: <http://dbpedia.org/property/> PREFIX  foaf: <http://xmlns.com/foaf/0.1/> PREFIX  owl:  <http://www.w3.org/2002/07/owl#> PREFIX  xsd:  <http://www.w3.org/2001/XMLSchema#> PREFIX  dbpedia: <http://dbpedia.org/> PREFIX  rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX  skos: <http://www.w3.org/2004/02/skos/core#>  SELECT  ?p ?o WHERE   { :Kyriakos_of_Makuria               ?p  ?o .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/1979_United_States_Grand_Prix_West> <http://dbpedia.org/property/grandPrix> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Waseca_County%2C_Minnesota> <http://www.w3.org/2000/01/rdf-schema#label> ?value . }
+PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>  SELECT  * WHERE   { <http://dbpedia.org/resource/James_Monroe_Miller>               rdfs:label  ?labels .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/Category:Buildings_and_structures_in_Charente-Maritime> <http://www.w3.org/2000/01/rdf-schema#label> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Lake_Seliger> <http://xmlns.com/foaf/0.1/depiction> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Chattooga_County%2C_Georgia> <http://xmlns.com/foaf/0.1/page> ?value . }
+PREFIX  skos: <http://www.w3.org/2004/02/skos/core#>  SELECT  * WHERE   { <http://dbpedia.org/resource/Sam_B._Williams>               skos:subject  ?category .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/Category:Victims_of_the_2010_Haiti_earthquake> <http://www.w3.org/2004/02/skos/core#broader> ?value . }
+SELECT  ?classes WHERE   { <http://dbpedia.org/resource/Reg_Baines>               <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?classes .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/Deerfield_Township%2C_Cass_County%2C_Minnesota> <http://dbpedia.org/property/populationTotal> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Category:British_antiquarians> <http://www.w3.org/2004/02/skos/core#prefLabel> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Category:Billboard_Top_100_number-one_singles> <http://www.w3.org/2000/01/rdf-schema#label> ?value . }
+SELECT  ?classes WHERE   { <http://dbpedia.org/resource/Howard_Stringer>               <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?classes .   } 
+SELECT  ?classes WHERE   { <http://dbpedia.org/resource/Red_Star_Belgrade>               <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?classes .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/Ithaca%2C_New_York> <http://dbpedia.org/property/yearLo_percent_C2_percent_B0c> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Korogaru_Iwa%2C_Kimi_ni_Asa_ga_Furu> <http://xmlns.com/foaf/0.1/page> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Category:Talmud_rabbis_of_the_Land_of_Israel> <http://www.w3.org/2004/02/skos/core#broader> ?value . }
+SELECT ?value WHERE { ?value <http://dbpedia.org/property/reference> <http://www.isara.fr/rubrique.php3?id_rubrique=40> . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Claremont_Township%2C_Dodge_County%2C_Minnesota> <http://dbpedia.org/property/longd> ?value . }
+PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>  SELECT  * WHERE   { <http://dbpedia.org/resource/Parkville_High_School>               rdfs:label  ?labels .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/Swieqi> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?value . }
+SELECT  ?classes WHERE   { <http://dbpedia.org/resource/Filippino_Lippi>               <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?classes .   } 
+SELECT  ?classes WHERE   { <http://dbpedia.org/resource/Chiclana_CF>               <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?classes .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/LP_Field> <http://www.georss.org/georss/point> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Category:Holocaust_terminology> <http://www.w3.org/2004/02/skos/core#prefLabel> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Malheur_County%2C_Oregon> <http://www.w3.org/2003/01/geo/wgs84_pos#long> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Category:Ice_hockey_personnel_from_Quebec> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Venice_Gardens%2C_Florida> <http://xmlns.com/foaf/0.1/depiction> ?value . }
+SELECT  ?classes WHERE   { <http://dbpedia.org/resource/U.S._Steel>               <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?classes .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/Agrigento> <http://dbpedia.org/property/latns> ?value . }
+PREFIX  dc:   <http://purl.org/dc/elements/1.1/> PREFIX  dbpedia2: <http://dbpedia.org/property/> PREFIX  dbpedia-owl: <http://dbpedia.org/ontology/> PREFIX  geo:  <http://www.w3.org/2003/01/geo/wgs84_pos#> PREFIX  foaf: <http://xmlns.com/foaf/0.1/> PREFIX  yago: <http://mpii.de/yago/resource/> PREFIX  georss: <http://www.georss.org/georss/> PREFIX  geonames: <http://www.geonames.org/ontology#> PREFIX  umbel-ac: <http://umbel.org/umbel/ac/> PREFIX  units: <http://dbpedia.org/units/> PREFIX  dcterms: <http://purl.org/dc/terms/> PREFIX  gn:   <http://xldb.di.fc.ul.pt/xldb/publications/2009/10/geo-net#> PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#> PREFIX  gnpt: <http://xldb.di.fc.ul.pt/xldb/publications/2009/10/geo-net-pt#> PREFIX  umbel-sc: <http://umbel.org/umbel/sc/> PREFIX  xsd:  <http://www.w3.org/2001/XMLSchema#> PREFIX  owl:  <http://www.w3.org/2002/07/owl#> PREFIX  dbpedia: <http://dbpedia.org/> PREFIX  gnpt02: <http://xldb.di.fc.ul.pt/xldb/publications/2009/10/geo-net-pt-02#> PREFIX  rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX  wikicompany: <http://dbpedia.openlinksw.com/wikicompany/> PREFIX  skos: <http://www.w3.org/2004/02/skos/core#> PREFIX  opencyc: <http://sw.opencyc.org/2008/06/10/concept/>  SELECT  ?s WHERE   { <http://dbpedia.org/resource/Stapleford_Aerodrome>               rdf:type  ?s .   } 
+SELECT  * WHERE   { ?name  <http://www.w3.org/2000/01/rdf-schema#label>  'Ted Nelson'@en ;            <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?type .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/Jill_Bennett_%28British_actress%29> <http://purl.org/dc/elements/1.1/description> ?value . }
+PREFIX  dc:   <http://purl.org/dc/elements/1.1/> PREFIX  :     <http://dbpedia.org/resource/> PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#> PREFIX  dbpedia2: <http://dbpedia.org/property/> PREFIX  foaf: <http://xmlns.com/foaf/0.1/> PREFIX  owl:  <http://www.w3.org/2002/07/owl#> PREFIX  xsd:  <http://www.w3.org/2001/XMLSchema#> PREFIX  dbpedia: <http://dbpedia.org/> PREFIX  rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX  skos: <http://www.w3.org/2004/02/skos/core#>  SELECT  ?p ?o WHERE   { :Kerma  ?p  ?o .} 
+SELECT ?value WHERE { <http://dbpedia.org/resource/Gusto_%28album%29> <http://xmlns.com/foaf/0.1/page> ?value . }
+SELECT  ?b WHERE   { <http://dbpedia.org/resource/Pyongyang>               <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?b .   } 
+SELECT ?value WHERE { ?value <http://www.w3.org/2003/01/geo/wgs84_pos#long> '27.4'^^<http://www.w3.org/2001/XMLSchema#double> . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/1981_Canadian_Grand_Prix> <http://dbpedia.org/property/nextYear_percent_27sRace> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Category:Cities%2C_towns_and_villages_in_Jamaica> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?value . }
+SELECT ?value WHERE { ?value <http://www.w3.org/2004/02/skos/core#prefLabel> 'Ambient music groups'@en . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/1986_Detroit_Grand_Prix> <http://dbpedia.org/property/type> ?value . }
+SELECT ?value WHERE { ?value <http://dbpedia.org/property/mother> 'Myaunk Pyinthe'@en . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Interstate_375_%28Florida%29> <http://xmlns.com/foaf/0.1/name> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Francis_D._Lyon> <http://www.w3.org/2000/01/rdf-schema#label> ?value . }
+PREFIX  skos: <http://www.w3.org/2004/02/skos/core#>  SELECT  * WHERE   { ?resource  skos:subject  <http://dbpedia.org/resource/Category:Brazilian_painters> .} 
+SELECT ?value WHERE { ?value <http://www.w3.org/2004/02/skos/core#broader> <http://dbpedia.org/resource/Category:Swedish_styles_of_music> . }
+PREFIX  rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>  SELECT  * WHERE   { <http://dbpedia.org/resource/Mayotte>               rdf:type  ?labels .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/Category:English_trade_unionists> <http://www.w3.org/2004/02/skos/core#prefLabel> ?value . }
+SELECT  ?classes WHERE   { <http://dbpedia.org/resource/Health_%26_Other_Services_Personnel_Trade_Union_of_South_Africa>               <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?classes .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/Chicken_Treat> <http://dbpedia.org/property/reference> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Herbert_V._G%C3%BCnther> <http://xmlns.com/foaf/0.1/page> ?value . }
+PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#> PREFIX  geo:  <http://www.w3.org/2003/01/geo/wgs84_pos#> PREFIX  foaf: <http://xmlns.com/foaf/0.1/> PREFIX  yago: <http://dbpedia.org/class/yago/> PREFIX  p:    <http://dbpedia.org/property/> PREFIX  rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX  skos: <http://www.w3.org/2004/02/skos/core#>  SELECT  * WHERE   { <http://dbpedia.org/resource/Wales%2C_South_Yorkshire>               skos:subject  ?category .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/Flovilla%2C_Georgia> <http://dbpedia.org/property/officialName> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Berlin%E2%80%93Ichthyosaur_State_Park> <http://xmlns.com/foaf/0.1/page> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Fort_Meade%2C_Florida> <http://www.w3.org/2000/01/rdf-schema#label> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Waseca_County%2C_Minnesota> <http://dbpedia.org/property/southwest> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Nashua%2C_New_Hampshire> <http://xmlns.com/foaf/0.1/depiction> ?value . }
+SELECT  ?classes WHERE   { <http://dbpedia.org/resource/University_of_Kassel>               <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?classes .   } 
+SELECT  * WHERE   { ?name  <http://www.w3.org/2000/01/rdf-schema#label>  'Dashon Goldson'@en ;            <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?type .   } 
+SELECT  * WHERE   { ?name  <http://www.w3.org/2000/01/rdf-schema#label>  'Christina DeRosa'@en ;            <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?type .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/Salzburg> <http://dbpedia.org/property/fl_percent_C3_percent_A4che> ?value . }
+SELECT  ?classes WHERE   { <http://dbpedia.org/resource/Lucaya_International_School>               <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?classes .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/108_Hospital> <http://xmlns.com/foaf/0.1/page> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Robert_Randolph_and_the_Family_Band> <http://xmlns.com/foaf/0.1/name> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Category:Spanish_film_directors> <http://www.w3.org/2004/02/skos/core#prefLabel> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Category:Neo-Byzantine_architecture_in_Connecticut> <http://www.w3.org/2004/02/skos/core#broader> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/CompactPCI> <http://www.w3.org/2000/01/rdf-schema#label> ?value . }
+PREFIX  dc:   <http://purl.org/dc/elements/1.1/> PREFIX  dbpedia2: <http://dbpedia.org/property/> PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#> PREFIX  dbpedia-owl: <http://dbpedia.org/ontology/> PREFIX  foaf: <http://xmlns.com/foaf/0.1/> PREFIX  dbpedia: <http://dbpedia.org/> PREFIX  xsd:  <http://www.w3.org/2001/XMLSchema#> PREFIX  owl:  <http://www.w3.org/2002/07/owl#> PREFIX  rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX  skos: <http://www.w3.org/2004/02/skos/core#> PREFIX  dcterms: <http://purl.org/dc/terms/>  SELECT  ?s WHERE   { <http://dbpedia.org/resource/Robert_Altman>               rdf:type  ?s .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/Tennessee_State_Route_374> <http://dbpedia.org/property/type> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Karlsruhe> <http://dbpedia.org/property/lonSec> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Phenix_City%2C_Alabama> <http://www.w3.org/2004/02/skos/core#subject> ?value . }
+SELECT  * WHERE   { ?name  <http://www.w3.org/2000/01/rdf-schema#label>  'Tapulous'@en ;            <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?type .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/Kajiwara_Kagemune> <http://www.w3.org/2000/01/rdf-schema#label> ?value . }
+SELECT  * WHERE   { ?name  <http://www.w3.org/2000/01/rdf-schema#label>  'Warwick Davis'@en ;            <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?type .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/Empire_Stadium_%28Vancouver%29> <http://www.w3.org/2003/01/geo/wgs84_pos#lat> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Category:Scottish_painters> <http://www.w3.org/2004/02/skos/core#prefLabel> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Ruskin%2C_Florida> <http://dbpedia.org/property/subdivisionType> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Category:American_voice_actors> <http://www.w3.org/2004/02/skos/core#broader> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Munich> <http://dbpedia.org/property/latSec> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/New_Orleans_Arena> <http://www.w3.org/2003/01/geo/wgs84_pos#lat> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Fire_Beadman> <http://xmlns.com/foaf/0.1/page> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Words_Get_in_the_Way> <http://dbpedia.org/property/reference> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/S%C3%B6dert%C3%A4lje> <http://dbpedia.org/property/novLo_percent_C2_percent_B0f> ?value . }
+PREFIX  dbprop: <http://dbpedia.org/ontology/>  SELECT  ?description WHERE   { <http://dbpedia.org/resource/Substance_%28Joy_Division_album%29>               dbprop:abstract  ?description .   } 
+SELECT  * WHERE   { ?name  <http://www.w3.org/2000/01/rdf-schema#label>  'Peter Jennings'@en ;            <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?type .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/Many_Farms%2C_Arizona> <http://dbpedia.org/property/coordinatesDisplay> ?value . }
+PREFIX  dc:   <http://purl.org/dc/elements/1.1/> PREFIX  dbpedia2: <http://dbpedia.org/property/> PREFIX  dbpedia-owl: <http://dbpedia.org/ontology/> PREFIX  geo:  <http://www.w3.org/2003/01/geo/wgs84_pos#> PREFIX  foaf: <http://xmlns.com/foaf/0.1/> PREFIX  yago: <http://mpii.de/yago/resource/> PREFIX  georss: <http://www.georss.org/georss/> PREFIX  geonames: <http://www.geonames.org/ontology#> PREFIX  umbel-ac: <http://umbel.org/umbel/ac/> PREFIX  units: <http://dbpedia.org/units/> PREFIX  dcterms: <http://purl.org/dc/terms/> PREFIX  gn:   <http://xldb.di.fc.ul.pt/xldb/publications/2009/10/geo-net#> PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#> PREFIX  gnpt: <http://xldb.di.fc.ul.pt/xldb/publications/2009/10/geo-net-pt#> PREFIX  umbel-sc: <http://umbel.org/umbel/sc/> PREFIX  xsd:  <http://www.w3.org/2001/XMLSchema#> PREFIX  owl:  <http://www.w3.org/2002/07/owl#> PREFIX  dbpedia: <http://dbpedia.org/> PREFIX  gnpt02: <http://xldb.di.fc.ul.pt/xldb/publications/2009/10/geo-net-pt-02#> PREFIX  rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX  wikicompany: <http://dbpedia.openlinksw.com/wikicompany/> PREFIX  skos: <http://www.w3.org/2004/02/skos/core#> PREFIX  opencyc: <http://sw.opencyc.org/2008/06/10/concept/>  SELECT  ?s WHERE   { <http://dbpedia.org/resource/Novouralsk>               rdf:type  ?s .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/Biola%2C_California> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Frostburg_State_University> <http://www.w3.org/2000/01/rdf-schema#label> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Kiana%2C_Alaska> <http://www.w3.org/2003/01/geo/wgs84_pos#lat> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Sancti_Sp%C3%ADritus%2C_Cuba> <http://xmlns.com/foaf/0.1/depiction> ?value . }
+SELECT  ?classes WHERE   { <http://dbpedia.org/resource/Ali_Mohammed_Mujur>               <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?classes .   } 
+SELECT  ?classes WHERE   { <http://dbpedia.org/resource/Kaba_Modern>               <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?classes .   } 
+PREFIX  dc:   <http://purl.org/dc/elements/1.1/> PREFIX  :     <http://dbpedia.org/resource/> PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#> PREFIX  dbpedia2: <http://dbpedia.org/property/> PREFIX  foaf: <http://xmlns.com/foaf/0.1/> PREFIX  owl:  <http://www.w3.org/2002/07/owl#> PREFIX  xsd:  <http://www.w3.org/2001/XMLSchema#> PREFIX  dbpedia: <http://dbpedia.org/> PREFIX  rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX  skos: <http://www.w3.org/2004/02/skos/core#>  SELECT  ?p ?o WHERE   { :Matsyasana  ?p  ?o .} 
+SELECT ?value WHERE { <http://dbpedia.org/resource/Category:Teaching_hospitals_in_Australia> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Me_Odio> <http://xmlns.com/foaf/0.1/depiction> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/T%C3%A5kern> <http://www.w3.org/2000/01/rdf-schema#label> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Category:Shopping_malls_established_in_1993> <http://www.w3.org/2004/02/skos/core#broader> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Susumu_Katsumata> <http://dbpedia.org/property/reference> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Jerry_Hillebrand> <http://www.w3.org/2004/02/skos/core#subject> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Mount_Joy%2C_Pennsylvania> <http://www.w3.org/2004/02/skos/core#subject> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Doug_Crusan> <http://www.w3.org/2000/01/rdf-schema#label> ?value . }
+PREFIX  rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#>  SELECT  * WHERE   { <http://dbpedia.org/resource/The_Tyra_Banks_Show>               rdf:type  ?labels .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/Category:Cities%2C_towns_and_villages_in_Khojavend_Rayon> <http://www.w3.org/2004/02/skos/core#broader> ?value . }
+SELECT  ?classes WHERE   { <http://dbpedia.org/resource/Psykosonik>               <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?classes .   } 
+SELECT ?value WHERE { ?value <http://www.w3.org/2004/02/skos/core#broader> <http://dbpedia.org/resource/Category:Television_actors_by_nationality> . }
+PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>  SELECT  * WHERE   { <http://dbpedia.org/resource/Seine-Maritime>               rdfs:label  ?labels .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/Category:Dallas_Texans_%28NFL%29_players> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Carlos_Gardel> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?value . }
+SELECT ?value WHERE { ?value <http://www.w3.org/2004/02/skos/core#subject> <http://dbpedia.org/resource/Category:Cameroonian_nurses> . }
+SELECT  ?classes WHERE   { <http://dbpedia.org/resource/Saint_Thomas_Aquinas_High_School_%28Hammond%2C_Louisiana%29>               <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?classes .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/Broni> <http://xmlns.com/foaf/0.1/name> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Jamui> <http://xmlns.com/foaf/0.1/page> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Greg_de_Vries> <http://www.w3.org/2004/02/skos/core#subject> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Pine_Hills%2C_Florida> <http://dbpedia.org/property/populationDensitySqMi> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Okinawa_Prefecture> <http://xmlns.com/foaf/0.1/depiction> ?value . }
+SELECT  ?classes WHERE   { <http://dbpedia.org/resource/San_Francisco_State_University>               <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?classes .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/Category:Costa_Rican_ornithologists> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Plaquemines_Parish%2C_Louisiana> <http://xmlns.com/foaf/0.1/page> ?value . }
+PREFIX  dc:   <http://purl.org/dc/elements/1.1/> PREFIX  dbpedia2: <http://dbpedia.org/property/> PREFIX  dbpedia-owl: <http://dbpedia.org/ontology/> PREFIX  geo:  <http://www.w3.org/2003/01/geo/wgs84_pos#> PREFIX  foaf: <http://xmlns.com/foaf/0.1/> PREFIX  yago: <http://mpii.de/yago/resource/> PREFIX  georss: <http://www.georss.org/georss/> PREFIX  geonames: <http://www.geonames.org/ontology#> PREFIX  umbel-ac: <http://umbel.org/umbel/ac/> PREFIX  units: <http://dbpedia.org/units/> PREFIX  dcterms: <http://purl.org/dc/terms/> PREFIX  gn:   <http://xldb.di.fc.ul.pt/xldb/publications/2009/10/geo-net#> PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#> PREFIX  gnpt: <http://xldb.di.fc.ul.pt/xldb/publications/2009/10/geo-net-pt#> PREFIX  umbel-sc: <http://umbel.org/umbel/sc/> PREFIX  xsd:  <http://www.w3.org/2001/XMLSchema#> PREFIX  owl:  <http://www.w3.org/2002/07/owl#> PREFIX  dbpedia: <http://dbpedia.org/> PREFIX  gnpt02: <http://xldb.di.fc.ul.pt/xldb/publications/2009/10/geo-net-pt-02#> PREFIX  rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX  wikicompany: <http://dbpedia.openlinksw.com/wikicompany/> PREFIX  skos: <http://www.w3.org/2004/02/skos/core#> PREFIX  opencyc: <http://sw.opencyc.org/2008/06/10/concept/>  SELECT  ?s WHERE   { <http://dbpedia.org/resource/Tolyatti>               rdf:type  ?s .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/Bremen%2C_Georgia> <http://dbpedia.org/property/areaLandKm> ?value . }
+SELECT  ?classes WHERE   { <http://dbpedia.org/resource/Chandrakant_Patankar>               <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?classes .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/Category:American_geographers> <http://www.w3.org/2000/01/rdf-schema#label> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Category:Aviation_in_Estonia> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?value . }
+SELECT  ?classes WHERE   { <http://dbpedia.org/resource/Merritt_College>               <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?classes .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/Alexander_Wetmore> <http://dbpedia.org/property/reference> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/L%C3%A1szl%C3%B3_Teleki> <http://www.w3.org/2004/02/skos/core#subject> ?value . }
+PREFIX  dc:   <http://purl.org/dc/elements/1.1/> PREFIX  :     <http://dbpedia.org/resource/> PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#> PREFIX  dbpedia2: <http://dbpedia.org/property/> PREFIX  foaf: <http://xmlns.com/foaf/0.1/> PREFIX  owl:  <http://www.w3.org/2002/07/owl#> PREFIX  xsd:  <http://www.w3.org/2001/XMLSchema#> PREFIX  dbpedia: <http://dbpedia.org/> PREFIX  rdf:  <http://www.w3.org/1999/02/22-rdf-syntax-ns#> PREFIX  skos: <http://www.w3.org/2004/02/skos/core#>  SELECT  ?p ?o WHERE   { :Vedanta  ?p  ?o .} 
+SELECT ?value WHERE { <http://dbpedia.org/resource/Red_Deer%2C_Alberta> <http://dbpedia.org/property/novLo_percent_C2_percent_B0c> ?value . }
+SELECT  ?classes WHERE   { <http://dbpedia.org/resource/Tofa%C5%9F>               <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?classes .   } 
+SELECT  ?classes WHERE   { <http://dbpedia.org/resource/Abcsearch>               <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?classes .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/1983_United_States_Grand_Prix_West> <http://xmlns.com/foaf/0.1/page> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Benjamin_Silliman> <http://xmlns.com/foaf/0.1/surname> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Arrowhead_Stadium> <http://www.w3.org/2003/01/geo/wgs84_pos#long> ?value . }
+PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>  SELECT  * WHERE   { <http://dbpedia.org/resource/Belfast_Central_Station>               rdfs:label  ?labels .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/I%27ll_Be_Doggone> <http://xmlns.com/foaf/0.1/name> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Ohio_State_Route_519> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?value . }
+SELECT ?value WHERE { ?value <http://www.w3.org/2004/02/skos/core#subject> <http://dbpedia.org/resource/Category:Professional_baseball_teams_in_Florida> . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Farm_to_Market_Road_2920> <http://dbpedia.org/property/previousRoute> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/New_Jersey_Route_440> <http://dbpedia.org/property/established> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Jon_Juaristi> <http://www.w3.org/2000/01/rdf-schema#label> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Ostium_of_Fallopian_tube> <http://xmlns.com/foaf/0.1/page> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Category:Ratios> <http://www.w3.org/2004/02/skos/core#prefLabel> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/North_Middletown%2C_Kentucky> <http://dbpedia.org/property/latm> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Bridgman%2C_Michigan> <http://www.w3.org/2004/02/skos/core#subject> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Thompson_Falls%2C_Montana> <http://dbpedia.org/property/latd> ?value . }
+SELECT  ?classes WHERE   { <http://dbpedia.org/resource/Canberra_FC>               <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?classes .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/Heysel_Park> <http://www.georss.org/georss/point> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Category:Writers_on_the_history_of_Cornwall> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Category:History_of_Latvia> <http://www.w3.org/2000/01/rdf-schema#label> ?value . }
+PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>  SELECT  * WHERE   { <http://dbpedia.org/resource/Thomas_Jefferson_Rusk>               rdfs:label  ?labels .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/North_Norfolk_Railway> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/Sziget_Festival> <http://dbpedia.org/property/reference> ?value . }
+SELECT  * WHERE   { ?name  <http://www.w3.org/2000/01/rdf-schema#label>  'Katharine McPhee'@en ;            <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?type .   } 
+PREFIX  rdfs: <http://www.w3.org/2000/01/rdf-schema#>  SELECT  ?label WHERE   { <http://dbpedia.org/resource/Assigned_amount_units>               rdfs:label  ?label .   } 
+SELECT  ?classes WHERE   { <http://dbpedia.org/resource/Top_Glove>               <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?classes .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/Category:Museums_in_Catalonia> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?value . }
+SELECT  ?classes WHERE   { <http://dbpedia.org/resource/Radcliffe_College>               <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>  ?classes .   } 
+SELECT ?value WHERE { <http://dbpedia.org/resource/List_of_counties_in_Iowa> <http://www.w3.org/2004/02/skos/core#subject> ?value . }
+SELECT ?value WHERE { <http://dbpedia.org/resource/College_Park%2C_Maryland> <http://dbpedia.org/property/areaLandKm> ?value . }

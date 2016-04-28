@@ -2,6 +2,8 @@ package org.aksw.iguana.reborn;
 
 import java.time.Duration;
 import java.time.Instant;
+import java.time.temporal.ChronoUnit;
+import java.time.temporal.TemporalUnit;
 import java.util.Iterator;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -56,6 +58,7 @@ public class TaskDispatcher<T, E>
 
                 Instant endInstant = Instant.now();
                 Duration duration = Duration.between(startInstant, endInstant);
+                //duration.get(ChronoUnit.MILLIS);
 
                 TaskTimeReport dispatcherReport = new TaskTimeReport(startInstant, duration, ex);
                 E executorReport = executorReportHolder.getValue();

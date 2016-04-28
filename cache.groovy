@@ -1,5 +1,7 @@
 package org.aksw.iguana
 
+import java.nio.file.Files
+import java.nio.file.Paths
 import java.util.concurrent.Callable
 import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
@@ -10,7 +12,7 @@ import java.util.stream.Collectors
 import org.aksw.iguana.reborn.SparqlTaskExecutor
 import org.aksw.iguana.reborn.TaskDispatcher
 import org.aksw.jena_sparql_api.compare.QueryExecutionFactoryCompare
-import org.aksw.jena_sparql_api.concept_cache.core.JenaExtensionViewCache;
+import org.aksw.jena_sparql_api.concept_cache.core.JenaExtensionViewCache
 import org.aksw.jena_sparql_api.concept_cache.core.OpExecutorFactoryViewCache
 import org.aksw.jena_sparql_api.concept_cache.core.QueryExecutionFactoryViewCacheMaster
 import org.aksw.jena_sparql_api.core.FluentQueryExecutionFactory
@@ -28,6 +30,8 @@ import org.apache.jena.rdf.model.RDFNode
 import org.apache.jena.sparql.core.Var
 
 import com.google.common.collect.Iterables
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 
 
 JenaExtensionViewCache.register()
@@ -51,20 +55,39 @@ String queryQueryStr = """
 
         FILTER(NOT EXISTS {
           ?id lsqv:usesFeature ?o
-          FILTER(?o IN (lsqv:Filter, lsqv:Distinct, lsqv:Optional, lsqv:Union))
+          FILTER(?o IN (lsqv:Filter, lsqv:Distinct, lsqv:Optional, lsqv:Union, lsqv:Minus))
         })
         FILTER (?rs > 0 && ?bgps = 1)
     }
 """.stripIndent()
 
 
+//queryQueryStr = """
+//    PREFIX lsqv: <http://lsq.aksw.org/vocab#>
+//    PREFIX sp: <http://spinrdf.org/sp#>
+//    PREFIX dct:<http://purl.org/dc/terms/>
+//    SELECT DISTINCT ?queryStr ?id {
+//      ?id
+//        a sp:Select ; # Can also use other forms
+//        sp:text ?queryStr ;
+//        lsqv:bgps ?bgps
+//
+//        FILTER(NOT EXISTS {
+//          ?id lsqv:usesFeature ?o
+//          FILTER(?o IN (lsqv:Optional, lsqv:Union, lsqv:Minus))
+//        })
+//
+//        FILTER (?bgps = 1)
+//    }
+//""".stripIndent()
+
 SparqlQueryParser queryParser = SparqlQueryParserImpl.create(Syntax.syntaxARQ)
 
 Query queryQuery = queryParser.apply(queryQueryStr)
-//queryQuery.setOffset(10)
-queryQuery.setLimit(50)
+queryQuery.setOffset(0)
+queryQuery.setLimit(250)
 
-
+println "Here"
 QueryExecutionFactory lsqQef = FluentQueryExecutionFactory
     .http("http://lsq.aksw.org/sparql", "http://dbpedia.org")
     .config()
@@ -85,8 +108,20 @@ String queryVarName = "" + queryVar
 lsqQef.createQueryExecution(queryQuery).execSelect().forEachRemaining {
     RDFNode queryNode = it.get(queryVarName)
     String queryStr = "" + queryNode
-    queries.add(queryStr.replace("\\n", " "))
+    queryStr = queryStr.replace("\\n", " ")
+    queries.add(queryStr)
 }
+
+println "Writing file..."
+Files.write(Paths.get("queries.out"), queries);
+
+
+
+// Write the queries to a file
+Gson gson = new GsonBuilder().setPrettyPrinting().create()
+String content = gson.toJson(queries)
+Files.write(Paths.get("./bgp-queries.json"), content.getBytes())
+
 
 
 Iterable<Query> tasks = Iterables.concat(queries, queries, queries)

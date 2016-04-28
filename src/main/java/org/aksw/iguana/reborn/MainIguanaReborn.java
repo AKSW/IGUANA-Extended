@@ -4,7 +4,13 @@ import java.util.List;
 
 import org.aksw.jena_sparql_api.core.QueryExecutionFactory;
 import org.apache.jena.ext.com.google.common.collect.Iterables;
-import org.apache.jena.sparql.algebra.optimize.Optimize;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryFactory;
+import org.apache.jena.query.Syntax;
+import org.apache.jena.sparql.algebra.Algebra;
+import org.apache.jena.sparql.algebra.Op;
+import org.apache.jena.sparql.algebra.Transformer;
+import org.apache.jena.sparql.algebra.optimize.TransformFilterPlacement;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
@@ -39,6 +45,17 @@ public class MainIguanaReborn {
      * @throws InterruptedException
      */
     public static void main(String[] args) throws InterruptedException {
+
+//        Query query = QueryFactory.create("SELECT * { { ?s ?p ?o } UNION { ?s ?p ?o } FILTER(?s = <foo>) }", Syntax.syntaxARQ);
+//        Op op = Algebra.compile(query);
+//        op = Transformer.transform(new TransformFilterPlacement(), op);
+//
+//
+//
+//        //Optimize.optimize(op, ARQ.getContext());
+//        System.out.println(op);
+//
+//        System.exit(0);
 
 //        int workers = 1;
 //        ExecutorService executorService = (workers == 1)
