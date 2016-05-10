@@ -17,20 +17,20 @@ import java.util.logging.Logger;
 
 import org.aksw.iguana.benchmark.processor.ResultProcessor;
 import org.aksw.iguana.extended.testcases.workers.DetailedWorker;
-import org.aksw.iguana.testcases.StressTestcase;
 import org.aksw.iguana.testcases.Testcase;
 import org.aksw.iguana.testcases.workers.UpdateFileHandler;
 import org.aksw.iguana.testcases.workers.Worker.LatencyStrategy;
 import org.aksw.iguana.utils.CalendarHandler;
 import org.aksw.iguana.utils.ResultSet;
 import org.aksw.iguana.utils.TimeOutException;
-import org.aksw.jena_sparql_api.compare.QueryExecutionFactoryCompare;
+import org.aksw.jena_sparql_api.concept_cache.core.JenaExtensionViewCache;
 import org.aksw.jena_sparql_api.concept_cache.core.OpExecutorFactoryViewCache;
 import org.aksw.jena_sparql_api.concept_cache.core.QueryExecutionFactoryViewCacheMaster;
 import org.aksw.jena_sparql_api.core.FluentQueryExecutionFactory;
 import org.aksw.jena_sparql_api.core.QueryExecutionFactory;
 import org.aksw.jena_sparql_api.stmt.SparqlQueryParserImpl;
 import org.aksw.jena_sparql_api.utils.transform.F_QueryTransformDatesetDescription;
+import org.apache.jena.query.ARQ;
 import org.apache.jena.query.Syntax;
 import org.bio_gene.wookie.connection.Connection;
 import org.bio_gene.wookie.utils.LogHandler;
@@ -39,9 +39,10 @@ import org.w3c.dom.Node;
 public class QECacheTestcase implements Testcase {
 
     static {
-        OpExecutorFactoryViewCache.registerGlobally();
+        ARQ.init();
+        JenaExtensionViewCache.register();
     }
-	
+
     private Collection<ResultSet> results = new LinkedList<ResultSet>();
     private Connection con;
     private String conName;
@@ -54,9 +55,9 @@ public class QECacheTestcase implements Testcase {
     private Map<Integer, DetailedWorker> workerPool = new HashMap<Integer, DetailedWorker>();
     private long timeLimit;
     private Properties prop;
-	private int pagination=100000;
-	private boolean cache;
-	
+    private int pagination=100000;
+    private boolean cache;
+
 
     @Override
     public void start() throws IOException {
@@ -74,11 +75,11 @@ public class QECacheTestcase implements Testcase {
         // wait time-limit
         waitTimeLimit();
         // getResults
-		makeResults();
+        makeResults();
 //		//
-		saveResults();
+        saveResults();
 //		//
-		cleanMaps();
+        cleanMaps();
 
         //TODO: Save results
 
@@ -86,37 +87,37 @@ public class QECacheTestcase implements Testcase {
         log.info("QECacheTestcase finished");
     }
 
-    
+
     protected void saveResults() {
-		for(ResultSet res : results){
-			String fileName = res.getFileName();
-			String[] prefixes = res.getPrefixes();
-			String suffix="";
-			for(String prefix : prefixes){
-				suffix+=prefix+File.separator;
-			}
-			String path = "."+File.separator+
-					ResultProcessor.getTempResultFolder()+
-					File.separator+QECacheTestcase.class.getName().replace(".", "-")+
-					File.separator+suffix;
-			new File(path).mkdirs();
-			res.setFileName(path+fileName);
-			try {
-				res.save();
-			} catch (IOException e) {
-				LogHandler.writeStackTrace(log, e, Level.SEVERE);
-			}
-			res.setFileName(fileName);
-		}
-	}
-    
+        for(ResultSet res : results){
+            String fileName = res.getFileName();
+            String[] prefixes = res.getPrefixes();
+            String suffix="";
+            for(String prefix : prefixes){
+                suffix+=prefix+File.separator;
+            }
+            String path = "."+File.separator+
+                    ResultProcessor.getTempResultFolder()+
+                    File.separator+QECacheTestcase.class.getName().replace(".", "-")+
+                    File.separator+suffix;
+            new File(path).mkdirs();
+            res.setFileName(path+fileName);
+            try {
+                res.save();
+            } catch (IOException e) {
+                LogHandler.writeStackTrace(log, e, Level.SEVERE);
+            }
+            res.setFileName(fileName);
+        }
+    }
 
-	private void cleanMaps() {
-		workerPool.clear();
+
+    private void cleanMaps() {
+        workerPool.clear();
 //		updateWorkerPool.clear();
-	}
+    }
 
-    
+
     private void waitTimeLimit() {
         Calendar start = Calendar.getInstance();
         log.info("Starting QECacheTestcase at: "+CalendarHandler.getFormattedTime(start));
@@ -162,14 +163,14 @@ public class QECacheTestcase implements Testcase {
 
 
     private void makeResults(){
-		List<List<ResultSet>> sparqlResults = new LinkedList<List<ResultSet>>();
-		for(Integer key : workerPool.keySet()){
-			List<ResultSet> res = (List<ResultSet>) workerPool.get(key).makeResults();
-			sparqlResults.add(res);
-			results.addAll(res);
-		}
+        List<List<ResultSet>> sparqlResults = new LinkedList<List<ResultSet>>();
+        for(Integer key : workerPool.keySet()){
+            List<ResultSet> res = (List<ResultSet>) workerPool.get(key).makeResults();
+            sparqlResults.add(res);
+            results.addAll(res);
+        }
     }
-    
+
     protected void startWorkers(){
         log.info("Starting Workers");
         //Starting all workers in new threads
@@ -194,10 +195,10 @@ public class QECacheTestcase implements Testcase {
 
     protected void initWorkers(){
 //		worker.setProps(sparqlProps);
-		List<LatencyStrategy> latencyStrategy=new LinkedList<LatencyStrategy>();
-		List<Integer[]> latencyAmount = new LinkedList<Integer[]>();
-		
-		QueryExecutionFactory rawQef = FluentQueryExecutionFactory
+        List<LatencyStrategy> latencyStrategy=new LinkedList<LatencyStrategy>();
+        List<Integer[]> latencyAmount = new LinkedList<Integer[]>();
+
+        QueryExecutionFactory rawQef = FluentQueryExecutionFactory
                 .http("http://akswnc3.informatik.uni-leipzig.de/data/dbpedia/sparql", "http://dbpedia.org")
                 .config()
                     .withParser(SparqlQueryParserImpl.create(Syntax.syntaxARQ))
@@ -213,22 +214,22 @@ public class QECacheTestcase implements Testcase {
 
 //        QueryExecutionFactory mainQef = new QueryExecutionFactoryCompare(
 //                rawQef, cachedQef);
-		
+
         for(int i=0;i<workers;i++){
             DetailedWorker worker = new DetailedWorker();
             worker.isPattern(false);
             worker.setLatencyAmount(latencyAmount);
-    		worker.setLatencyStrategy(latencyStrategy);
-    		worker.setQueriesPath(prop.getProperty("queries-path"));
-    		worker.setTimeLimit(timeLimit);
-    		worker.setPrefixes(this.prefixes);
-    		worker.setConName(conName);
+            worker.setLatencyStrategy(latencyStrategy);
+            worker.setQueriesPath(prop.getProperty("queries-path"));
+            worker.setTimeLimit(timeLimit);
+            worker.setPrefixes(this.prefixes);
+            worker.setConName(conName);
             worker.setConnection(con);
             worker.setWorkerNr(i);
             if(cache)
-            	worker.setQef(cachedQef);
+                worker.setQef(cachedQef);
             else
-            	worker.setQef(rawQef);
+                worker.setQef(rawQef);
             worker.setProps(prop);
             worker.init(i);
             workerPool.put(i, worker);
@@ -253,14 +254,14 @@ public class QECacheTestcase implements Testcase {
         this.prop = p;
         this.timeLimit = Long.valueOf(p.getProperty("timeLimit"));
         if(p.contains("pagination")){
-        	pagination = Integer.valueOf(p.getProperty("pagination"));
+            pagination = Integer.valueOf(p.getProperty("pagination"));
         }
         if(p.contains("worker")){
-        	this.workers=Integer.valueOf(p.getProperty("worker"));
+            this.workers=Integer.valueOf(p.getProperty("worker"));
         }
         if (p.getProperty("cache") != null)
             this.cache = Boolean.valueOf(p.getProperty("cache"));
-        
+
     }
 
     @Override
