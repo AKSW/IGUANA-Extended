@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import org.aksw.iguana.benchmark.processor.ResultProcessor;
+import org.aksw.iguana.connection.Connection;
 import org.aksw.iguana.extended.testcases.workers.DetailedWorker;
 import org.aksw.iguana.testcases.Testcase;
 import org.aksw.iguana.testcases.workers.UpdateFileHandler;
@@ -23,6 +24,7 @@ import org.aksw.iguana.testcases.workers.Worker.LatencyStrategy;
 import org.aksw.iguana.utils.CalendarHandler;
 import org.aksw.iguana.utils.ResultSet;
 import org.aksw.iguana.utils.TimeOutException;
+import org.aksw.iguana.utils.logging.LogHandler;
 import org.aksw.jena_sparql_api.concept_cache.core.JenaExtensionViewCache;
 import org.aksw.jena_sparql_api.concept_cache.core.OpExecutorFactoryViewCache;
 import org.aksw.jena_sparql_api.concept_cache.core.QueryExecutionFactoryViewCacheMaster;
@@ -32,8 +34,6 @@ import org.aksw.jena_sparql_api.stmt.SparqlQueryParserImpl;
 import org.aksw.jena_sparql_api.utils.transform.F_QueryTransformDatesetDescription;
 import org.apache.jena.query.ARQ;
 import org.apache.jena.query.Syntax;
-import org.bio_gene.wookie.connection.Connection;
-import org.bio_gene.wookie.utils.LogHandler;
 import org.w3c.dom.Node;
 
 public class QECacheTestcase implements Testcase {

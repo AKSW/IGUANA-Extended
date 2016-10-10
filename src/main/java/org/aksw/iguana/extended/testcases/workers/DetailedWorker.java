@@ -1,33 +1,19 @@
 package org.aksw.iguana.extended.testcases.workers;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.util.Calendar;
 import java.util.Map;
 import java.util.Properties;
 import java.util.UUID;
-import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 
 import org.aksw.iguana.testcases.workers.SparqlWorker;
-import org.aksw.jena_sparql_api.compare.QueryExecutionFactoryCompare;
-import org.aksw.jena_sparql_api.concept_cache.core.OpExecutorFactoryViewCache;
-import org.aksw.jena_sparql_api.concept_cache.core.QueryExecutionFactoryViewCacheMaster;
-import org.aksw.jena_sparql_api.core.FluentQueryExecutionFactory;
+import org.aksw.iguana.utils.logging.LogHandler;
 import org.aksw.jena_sparql_api.core.QueryExecutionFactory;
-import org.aksw.jena_sparql_api.stmt.SparqlQueryParserImpl;
-import org.aksw.jena_sparql_api.utils.transform.F_QueryTransformDatesetDescription;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.query.ResultSetFormatter;
-import org.apache.jena.query.Syntax;
 import org.apache.jena.rdf.model.Model;
-import org.bio_gene.wookie.utils.LogHandler;
 
 
 public class DetailedWorker extends SparqlWorker implements Runnable {
@@ -127,7 +113,7 @@ public class DetailedWorker extends SparqlWorker implements Runnable {
         waitTime();
         int time = -1;
 
-        
+
 
         //Query q = null;
         //q = QueryFactory.create(query);
@@ -173,7 +159,7 @@ public class DetailedWorker extends SparqlWorker implements Runnable {
     }
 
 	public void setQef(QueryExecutionFactory mainQef) {
-		this.mainQef = mainQef;		
+		this.mainQef = mainQef;
 	}
 
 }
