@@ -167,7 +167,7 @@ Cache<Node, StorageEntry> queryCache = tmp.getCache();
 QueryExecutionFactory cachedQef = new QueryExecutionFactoryParse(tmp, SparqlQueryParserImpl.create());
 
 
-QueryExecutionFactory dataQef = new QueryExecutionFactoryCompare(rawQef, cachedQef)
+QueryExecutionFactory dataQef = new QueryExecutionFactoryCompare(cachedQef, rawQef)
 
 
 
@@ -216,7 +216,10 @@ List<Future<?>> futures = executorService.invokeAll(callables)
 
 println("Shutting down executor service")
 executorService.shutdown()
-executorService.awaitTermination(1, TimeUnit.DAYS)
+executorService.awaitTermination(5, TimeUnit.SECONDS)
+
+cacheExecutorService.shutdown()
+cacheExecutorService.awaitTermination(5, TimeUnit.SECONDS)
 
 for(Future<?> future : futures) {
     try {
