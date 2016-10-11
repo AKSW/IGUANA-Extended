@@ -25,13 +25,11 @@ import org.aksw.iguana.utils.CalendarHandler;
 import org.aksw.iguana.utils.ResultSet;
 import org.aksw.iguana.utils.TimeOutException;
 import org.aksw.iguana.utils.logging.LogHandler;
-import org.aksw.jena_sparql_api.concept_cache.core.JenaExtensionViewCache;
-import org.aksw.jena_sparql_api.concept_cache.core.OpExecutorFactoryViewCache;
-import org.aksw.jena_sparql_api.concept_cache.core.QueryExecutionFactoryViewCacheMaster;
+import org.aksw.jena_sparql_api.concept_cache.core.JenaExtensionViewMatcher;
 import org.aksw.jena_sparql_api.core.FluentQueryExecutionFactory;
 import org.aksw.jena_sparql_api.core.QueryExecutionFactory;
 import org.aksw.jena_sparql_api.stmt.SparqlQueryParserImpl;
-import org.aksw.jena_sparql_api.utils.transform.F_QueryTransformDatesetDescription;
+import org.aksw.jena_sparql_api.utils.transform.ElementTransformDatasetDescription;
 import org.apache.jena.query.ARQ;
 import org.apache.jena.query.Syntax;
 import org.w3c.dom.Node;
@@ -40,7 +38,7 @@ public class QECacheTestcase implements Testcase {
 
     static {
         ARQ.init();
-        JenaExtensionViewCache.register();
+        JenaExtensionViewMatcher.register();
     }
 
     private Collection<ResultSet> results = new LinkedList<ResultSet>();
@@ -202,15 +200,15 @@ public class QECacheTestcase implements Testcase {
                 .http("http://akswnc3.informatik.uni-leipzig.de/data/dbpedia/sparql", "http://dbpedia.org")
                 .config()
                     .withParser(SparqlQueryParserImpl.create(Syntax.syntaxARQ))
-                    .withQueryTransform(F_QueryTransformDatesetDescription.fn)
+                    .withQueryTransform(ElementTransformDatasetDescription::rewrite)
                     .withPagination(pagination)
                     .withPostProcessor(qe -> qe.setTimeout(3, TimeUnit.SECONDS))
                 .end()
                 .create();
 
-
-        QueryExecutionFactory cachedQef = new QueryExecutionFactoryViewCacheMaster(
-                rawQef, OpExecutorFactoryViewCache.get().getServiceMap());
+        QueryExecutionFactory cachedQef = rawQef;
+//        QueryExecutionFactory cachedQef = new QueryExecutionFactoryViewCacheMaster(
+//                rawQef, OpExecutorFactoryViewCache.get().getServiceMap());
 
 //        QueryExecutionFactory mainQef = new QueryExecutionFactoryCompare(
 //                rawQef, cachedQef);

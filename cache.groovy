@@ -12,29 +12,33 @@ import java.util.stream.Collectors
 import org.aksw.iguana.reborn.SparqlTaskExecutor
 import org.aksw.iguana.reborn.TaskDispatcher
 import org.aksw.jena_sparql_api.compare.QueryExecutionFactoryCompare
-import org.aksw.jena_sparql_api.concept_cache.core.JenaExtensionViewCache
-import org.aksw.jena_sparql_api.concept_cache.core.OpExecutorFactoryViewCache
-import org.aksw.jena_sparql_api.concept_cache.core.QueryExecutionFactoryViewCacheMaster
+import org.aksw.jena_sparql_api.concept_cache.core.JenaExtensionViewMatcher
+import org.aksw.jena_sparql_api.concept_cache.core.QueryExecutionFactoryViewMatcherMaster
+import org.aksw.jena_sparql_api.concept_cache.core.StorageEntry
 import org.aksw.jena_sparql_api.core.FluentQueryExecutionFactory
 import org.aksw.jena_sparql_api.core.QueryExecutionFactory
 import org.aksw.jena_sparql_api.core.QueryExecutionFactoryDecorator
 import org.aksw.jena_sparql_api.core.utils.QueryExecutionUtils
 import org.aksw.jena_sparql_api.delay.extra.DelayerDefault
+import org.aksw.jena_sparql_api.parse.QueryExecutionFactoryParse
 import org.aksw.jena_sparql_api.stmt.SparqlQueryParser
 import org.aksw.jena_sparql_api.stmt.SparqlQueryParserImpl
-import org.aksw.jena_sparql_api.utils.transform.F_QueryTransformDatesetDescription
+import org.aksw.jena_sparql_api.utils.transform.ElementTransformDatasetDescription
 import org.apache.jena.ext.com.google.common.util.concurrent.MoreExecutors
+import org.apache.jena.graph.Node
 import org.apache.jena.query.Query
 import org.apache.jena.query.Syntax
 import org.apache.jena.rdf.model.RDFNode
 import org.apache.jena.sparql.core.Var
 
+import com.google.common.cache.Cache
+import com.google.common.cache.CacheBuilder
 import com.google.common.collect.Iterables
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 
 
-JenaExtensionViewCache.register()
+JenaExtensionViewMatcher.register()
 
 
 String queryQueryStr = """
@@ -145,14 +149,30 @@ QueryExecutionFactory rawQef = FluentQueryExecutionFactory
 //.http("http://localhost:8890/sparql", "http://dbpedia.org")
 .config()
     .withParser(SparqlQueryParserImpl.create(Syntax.syntaxARQ))
-    .withQueryTransform(F_QueryTransformDatesetDescription.fn)
-    .withPagination(100000)
+    .withQueryTransform(ElementTransformDatasetDescription.&rewrite)
+    .withPagination(50000)
+	.withDefaultLimit(50000, true)
 .end()
 .create()
 
 
-QueryExecutionFactory cachedQef = new QueryExecutionFactoryViewCacheMaster(rawQef, OpExecutorFactoryViewCache.get().getServiceMap())
+
+CacheBuilder<Object, Object> queryCacheBuilder = CacheBuilder.newBuilder()
+	.maximumSize(10000);
+
+ExecutorService cacheExecutorService = Executors.newCachedThreadPool();
+
+QueryExecutionFactoryViewMatcherMaster tmp = QueryExecutionFactoryViewMatcherMaster.create(rawQef, queryCacheBuilder, cacheExecutorService);
+Cache<Node, StorageEntry> queryCache = tmp.getCache();
+QueryExecutionFactory cachedQef = new QueryExecutionFactoryParse(tmp, SparqlQueryParserImpl.create());
+
+
 QueryExecutionFactory dataQef = new QueryExecutionFactoryCompare(rawQef, cachedQef)
+
+
+
+
+
 
 
 
@@ -188,7 +208,9 @@ TaskDispatcher taskDispatcher =
 
 List<Runnable<?>> runnables = Collections.singletonList(taskDispatcher);
 
-List<Callable<?>> callables = runnables.stream().map({r -> Executors.callable(r)}).collect(Collectors.toList())
+List<Callable<?>> callables = runnables.stream()
+	.map({r -> Executors.callable(r)})
+	.collect(Collectors.toList())
 
 List<Future<?>> futures = executorService.invokeAll(callables)
 
