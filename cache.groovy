@@ -24,7 +24,7 @@ import org.aksw.jena_sparql_api.core.QueryExecutionFactoryDecorator
 import org.aksw.jena_sparql_api.core.utils.QueryExecutionUtils
 import org.aksw.jena_sparql_api.delay.extra.DelayerDefault
 import org.aksw.jena_sparql_api.parse.QueryExecutionFactoryParse
-import org.aksw.jena_sparql_api.remap.QueryExecutionFactoryRemap
+import org.aksw.jena_sparql_api.rename_vars.QueryExecutionFactoryRenameVars
 import org.aksw.jena_sparql_api.stmt.SparqlQueryParser
 import org.aksw.jena_sparql_api.stmt.SparqlQueryParserImpl
 import org.aksw.jena_sparql_api.utils.transform.ElementTransformDatasetDescription
@@ -35,7 +35,6 @@ import org.apache.jena.rdf.model.Model
 import org.apache.jena.rdf.model.ModelFactory
 import org.apache.jena.rdf.model.RDFNode
 import org.apache.jena.rdf.model.Resource
-import org.apache.jena.riot.Lang
 import org.apache.jena.sparql.core.Var
 import org.apache.jena.util.ResourceUtils
 
@@ -145,7 +144,10 @@ for(int i = 0; i < queries.size; ++i) {
 	tasks.add(t)
 }
 
-tasksModel.write(System.out, "TURTLE")
+
+PrintStream out = new PrintStream(new FileOutputStream("/tmp/data.ttl"))
+
+tasksModel.write(out, "TURTLE")
 
 // Create tasks from the queries
 Iterator<Resource> taskExecs = IntStream.range(0, 5).boxed().flatMap({ runId ->
@@ -210,7 +212,7 @@ ExecutorService cacheExecutorService = Executors.newCachedThreadPool();
 QueryExecutionFactoryViewMatcherMaster tmp = QueryExecutionFactoryViewMatcherMaster.create(rawQef, queryCacheBuilder, cacheExecutorService);
 Cache<Node, StorageEntry> queryCache = tmp.getCache();
 rawQef = tmp
-rawQef = new QueryExecutionFactoryRemap(rawQef);
+rawQef = new QueryExecutionFactoryRenameVars(rawQef);
 
 QueryExecutionFactory cachedQef = new QueryExecutionFactoryParse(rawQef, SparqlQueryParserImpl.create());
 
@@ -252,7 +254,7 @@ TaskDispatcher taskDispatcher =
 		taskToEntity,
         sparqlTaskExecutor,
         new DelayerDefault(0), // ms
-        { it.getModel().write(System.out, "TURTLE") }) // report callback
+        { it.getModel().write(out, "TURTLE") }) // report callback
 
 
 List<Runnable<?>> runnables = Collections.singletonList(taskDispatcher);
@@ -269,6 +271,10 @@ executorService.awaitTermination(5, TimeUnit.SECONDS)
 
 cacheExecutorService.shutdown()
 cacheExecutorService.awaitTermination(5, TimeUnit.SECONDS)
+
+if(out != System.out) {
+	out.close()
+}
 
 for(Future<?> future : futures) {
     try {

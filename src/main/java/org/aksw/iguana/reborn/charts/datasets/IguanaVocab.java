@@ -11,9 +11,9 @@ public class IguanaVocab {
     public static Property property(String local) { return ResourceFactory.createProperty(ns + local); }
 
     // Used internally for the hypergraph representation - not part of the public vocab
-    public static final Property queryId = property(ns + "queryId");
-    public static final Property workload = property(ns + "workload");
-    public static final Property run = property(ns + "run");
+    public static final Property queryId = property("queryId");
+    public static final Property workload = property("workload");
+    public static final Property run = property("run");
     //public static final Property numericDuration = property(ns + "numericDuration");
 
 

@@ -3,16 +3,25 @@ package org.aksw.iguana.reborn.charts.datasets;
 import java.awt.Color;
 import java.awt.GradientPaint;
 import java.awt.Paint;
+import java.util.function.Function;
 
-import org.aksw.jena_sparql_api.transform.QueryExecutionFactoryQueryTransform;
+import org.aksw.iguana.reborn.OWLTIME;
+import org.aksw.jena_sparql_api.core.FluentQueryExecutionFactory;
+import org.aksw.jena_sparql_api.core.QueryExecutionFactory;
+import org.aksw.jena_sparql_api.prefix.core.QueryTransformPrefix;
+import org.aksw.jena_sparql_api.stmt.SparqlQueryParserImpl;
 import org.aksw.simba.lsq.vocab.LSQ;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.ResultSet;
+import org.apache.jena.query.Syntax;
+import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.shared.PrefixMapping;
 import org.apache.jena.shared.impl.PrefixMappingImpl;
+import org.apache.jena.sparql.core.Prologue;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.LegendItemCollection;
@@ -26,13 +35,35 @@ import org.jfree.data.category.DefaultCategoryDataset;
 import org.jfree.data.statistics.DefaultStatisticalCategoryDataset;
 import org.jfree.ui.GradientPaintTransformType;
 import org.jfree.ui.StandardGradientPaintTransformer;
-import org.springframework.ui.Model;
 
 import com.google.common.collect.HashMultimap;
 import com.google.common.collect.Multimap;
 
 public class IguanaDatasetProcessors {
 
+	public static void main(String[] args) {
+
+		Model m = RDFDataMgr.loadModel("/tmp/data.ttl");
+
+
+		PrefixMapping pm = new PrefixMappingImpl();
+		pm.setNsPrefixes(PrefixMappingImpl.Extended);
+		pm.setNsPrefix("ex", "http://example.org/ontology#");
+		pm.setNsPrefix("ig", IguanaVocab.ns);
+		pm.setNsPrefix("lsq", LSQ.ns);
+		pm.setNsPrefix("time", OWLTIME.ns);
+
+		Function<Query, Query> queryTransform = new QueryTransformPrefix(pm);
+
+		QueryExecutionFactory qef = FluentQueryExecutionFactory.from(m)
+				.config()
+					.withQueryTransform(queryTransform)
+					.withParser(SparqlQueryParserImpl.create(Syntax.syntaxARQ, new Prologue(pm)))
+				.end()
+				.create();
+		createDataset(qef);
+
+	}
 
 
 	/**
@@ -43,28 +74,26 @@ public class IguanaDatasetProcessors {
 	 * @param model
 	 * @return
 	 */
-	public CategoryDataset createDataset(Model model) {
+	public static CategoryDataset createDataset(QueryExecutionFactory qef) {//Model model) {
 		// (avgExecutionTime, executorLabel, queryId)
 		// Create the avg execution time for each executor
-		PrefixMapping pm = new PrefixMappingImpl();
-		pm.setNsPrefixes(PrefixMappingImpl.Extended);
-		pm.setNsPrefix("ig", IguanaVocab.ns);
-		pm.setNsPrefix("lsq", LSQ.ns);
+
+
 
 		String queryStr = String.join("\n",
 			"SELECT ?r ?i ?m ?c {",
 			"  ?s",
-			"    ig:run ?r",
-			"    ig:workload/ig:id ?i", // ; lsq:text ?w]",
-			"    time:numericDuration ?m",
-			"    ex:executor ?e/rdfs:label ?c",
+			"    ig:run ?r ;",
+			"    ig:workload/ig:id ?i ;", // ; lsq:text ?w]",
+			"    time:numericDuration ?m ;",
+			"    ex:executor/rdfs:label ?c ;",
+			"    .",
 			"}");
 
 		//QueryExecutionFactoryQueryTransform
 
-		Query query;
 		// get result vars and interpret them according to the order
-		QueryExecution qe = null;
+		QueryExecution qe = qef.createQueryExecution(queryStr);
 		ResultSet rs = qe.execSelect();
 
 //
@@ -78,7 +107,7 @@ public class IguanaDatasetProcessors {
 
 
 		DefaultStatisticalCategoryDataset result = new DefaultStatisticalCategoryDataset();
-		result.
+		//result.
 
 		// 1. For each query, create
 		return null;
@@ -252,16 +281,16 @@ public class IguanaDatasetProcessors {
     // * support us so that we can continue developing free software.             *
     // ****************************************************************************
 
-    /**
-     * Starting point for the demonstration application.
-     *
-     * @param args  ignored.
-     */
-    public static void main(final String[] args) {
-//        final StackedBarChartDemo4 demo = new StackedBarChartDemo4("Stacked Bar Chart Demo 4");
-//        demo.pack();
-//        RefineryUtilities.centerFrameOnScreen(demo);
-//        demo.setVisible(true);
-    }
+//    /**
+//     * Starting point for the demonstration application.
+//     *
+//     * @param args  ignored.
+//     */
+//    public static void main(final String[] args) {
+////        final StackedBarChartDemo4 demo = new StackedBarChartDemo4("Stacked Bar Chart Demo 4");
+////        demo.pack();
+////        RefineryUtilities.centerFrameOnScreen(demo);
+////        demo.setVisible(true);
+//    }
 
 }

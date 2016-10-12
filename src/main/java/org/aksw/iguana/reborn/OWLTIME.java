@@ -11,6 +11,6 @@ public class OWLTIME {
     public static Property property(String local) { return ResourceFactory.createProperty(ns + local); }
 
     // Used internally for the hypergraph representation - not part of the public vocab
-    public static final Property hasDuration = property(ns + "hasDuration");
-    public static final Property numericDuration = property(ns + "numericDuration");
+    public static final Property hasDuration = property("hasDuration");
+    public static final Property numericDuration = property("numericDuration");
 }
