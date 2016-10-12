@@ -159,6 +159,7 @@ Iterator<Resource> taskExecs = IntStream.range(0, 5).boxed().flatMap({ runId ->
   long queryId = x.getRequiredProperty(IguanaVocab.queryId).getObject().asLiteral().getLong()
   def r = m.createResource("http://example.org/query-" + queryId + "-run-" + it[0])
   r.addProperty(IguanaVocab.workload, x)
+  r.addProperty(IguanaVocab.run, it[0])
   r
   //m.write(System.out, "TURTLE")
 }).iterator()

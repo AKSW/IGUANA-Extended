@@ -4,11 +4,15 @@ import java.awt.Color;
 import java.awt.GradientPaint;
 import java.awt.Paint;
 
+import org.aksw.jena_sparql_api.transform.QueryExecutionFactoryQueryTransform;
+import org.aksw.simba.lsq.vocab.LSQ;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.shared.PrefixMapping;
+import org.apache.jena.shared.impl.PrefixMappingImpl;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.LegendItemCollection;
@@ -19,8 +23,8 @@ import org.jfree.chart.renderer.category.GroupedStackedBarRenderer;
 import org.jfree.data.KeyToGroupMap;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
+import org.jfree.data.statistics.DefaultStatisticalCategoryDataset;
 import org.jfree.ui.GradientPaintTransformType;
-import org.jfree.ui.RefineryUtilities;
 import org.jfree.ui.StandardGradientPaintTransformer;
 import org.springframework.ui.Model;
 
@@ -42,13 +46,21 @@ public class IguanaDatasetProcessors {
 	public CategoryDataset createDataset(Model model) {
 		// (avgExecutionTime, executorLabel, queryId)
 		// Create the avg execution time for each executor
+		PrefixMapping pm = new PrefixMappingImpl();
+		pm.setNsPrefixes(PrefixMappingImpl.Extended);
+		pm.setNsPrefix("ig", IguanaVocab.ns);
+		pm.setNsPrefix("lsq", LSQ.ns);
+
 		String queryStr = String.join("\n",
-			"SELECT ?t ?ql ?el {",
+			"SELECT ?r ?i ?m ?c {",
 			"  ?s",
-			"    ex:query/rdfs:label ?ql",
-			"    ex:executionTime ?t",
-			"    ex:executor ?e/rdfs:label ?el",
-			"} Group By ?ql ?el");
+			"    ig:run ?r",
+			"    ig:workload/ig:id ?i", // ; lsq:text ?w]",
+			"    time:numericDuration ?m",
+			"    ex:executor ?e/rdfs:label ?c",
+			"}");
+
+		//QueryExecutionFactoryQueryTransform
 
 		Query query;
 		// get result vars and interpret them according to the order
@@ -65,8 +77,8 @@ public class IguanaDatasetProcessors {
 
 
 
-		//final DefaultStatisticalCategoryDataset result = new DefaultStatisticalCategoryDataset();
-
+		DefaultStatisticalCategoryDataset result = new DefaultStatisticalCategoryDataset();
+		result.
 
 		// 1. For each query, create
 		return null;
