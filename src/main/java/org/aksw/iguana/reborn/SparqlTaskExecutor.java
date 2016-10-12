@@ -1,13 +1,15 @@
 package org.aksw.iguana.reborn;
 
 import java.util.function.BiConsumer;
-import java.util.function.Consumer;
+import java.util.function.Function;
 
 import org.aksw.jena_sparql_api.core.QueryExecutionFactory;
+import org.aksw.simba.lsq.vocab.LSQ;
 import org.apache.jena.query.QueryExecution;
+import org.apache.jena.rdf.model.Resource;
 
 public class SparqlTaskExecutor
-    implements BiConsumer<String, Consumer<Holder<Void>>>
+    implements BiConsumer<String, Resource>
 {
     protected QueryExecutionFactory qef;
 
@@ -19,20 +21,21 @@ public class SparqlTaskExecutor
      * QueryExecutionUtils::abortAfterFirstRow
      *
      */
-    protected Consumer<QueryExecution> queryExecutionConsumer;
+    protected Function<? super QueryExecution, ? extends Number> queryExecutionConsumer;
 
     public SparqlTaskExecutor(
             QueryExecutionFactory qef,
-            Consumer<QueryExecution> queryExecutionConsumer) {
+            Function<? super QueryExecution, ? extends Number> queryExecutionConsumer) {
         super();
         this.qef = qef;
         this.queryExecutionConsumer = queryExecutionConsumer;
     }
 
     @Override
-    public void accept(String queryStr, Consumer<Holder<Void>> reporter) {
+    public void accept(String queryStr, Resource out) {
         QueryExecution qe = qef.createQueryExecution(queryStr);
-        queryExecutionConsumer.accept(qe);
+        Number processedItems = queryExecutionConsumer.apply(qe);
+        out.addLiteral(LSQ.resultSize, processedItems);
     }
 
 }

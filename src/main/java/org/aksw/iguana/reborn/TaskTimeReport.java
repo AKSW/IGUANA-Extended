@@ -18,7 +18,7 @@ public class TaskTimeReport {
 
     /**
      * Exception encountered during task execution - if any
-     * A task is considered successful, if this is null
+     * A task is usually considered successful, if this is null
      *
      */
     protected Exception exception;

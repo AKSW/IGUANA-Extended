@@ -7,10 +7,13 @@ import java.util.concurrent.ExecutorService
 import java.util.concurrent.Executors
 import java.util.concurrent.Future
 import java.util.concurrent.TimeUnit
+import java.util.function.Function
 import java.util.stream.Collectors
+import java.util.stream.IntStream
 
 import org.aksw.iguana.reborn.SparqlTaskExecutor
 import org.aksw.iguana.reborn.TaskDispatcher
+import org.aksw.iguana.reborn.charts.datasets.IguanaVocab
 import org.aksw.jena_sparql_api.compare.QueryExecutionFactoryCompare
 import org.aksw.jena_sparql_api.concept_cache.core.JenaExtensionViewMatcher
 import org.aksw.jena_sparql_api.concept_cache.core.QueryExecutionFactoryViewMatcherMaster
@@ -21,19 +24,24 @@ import org.aksw.jena_sparql_api.core.QueryExecutionFactoryDecorator
 import org.aksw.jena_sparql_api.core.utils.QueryExecutionUtils
 import org.aksw.jena_sparql_api.delay.extra.DelayerDefault
 import org.aksw.jena_sparql_api.parse.QueryExecutionFactoryParse
+import org.aksw.jena_sparql_api.remap.QueryExecutionFactoryRemap
 import org.aksw.jena_sparql_api.stmt.SparqlQueryParser
 import org.aksw.jena_sparql_api.stmt.SparqlQueryParserImpl
 import org.aksw.jena_sparql_api.utils.transform.ElementTransformDatasetDescription
-import org.apache.jena.ext.com.google.common.util.concurrent.MoreExecutors
-import org.apache.jena.graph.Node
+import org.aksw.simba.lsq.vocab.LSQ
 import org.apache.jena.query.Query
 import org.apache.jena.query.Syntax
+import org.apache.jena.rdf.model.Model
+import org.apache.jena.rdf.model.ModelFactory
 import org.apache.jena.rdf.model.RDFNode
+import org.apache.jena.rdf.model.Resource
+import org.apache.jena.riot.Lang
 import org.apache.jena.sparql.core.Var
+import org.apache.jena.util.ResourceUtils
 
 import com.google.common.cache.Cache
 import com.google.common.cache.CacheBuilder
-import com.google.common.collect.Iterables
+import com.google.common.util.concurrent.MoreExecutors
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 
@@ -126,9 +134,45 @@ Gson gson = new GsonBuilder().setPrettyPrinting().create()
 String content = gson.toJson(queries)
 Files.write(Paths.get("./bgp-queries.json"), content.getBytes())
 
+Model tasksModel = ModelFactory.createDefaultModel();
+List<Resource> tasks = new ArrayList<>()
+for(int i = 0; i < queries.size; ++i) {
+	String query = queries.get(i)
+	Resource t = tasksModel.createResource("http://example.org/query-" + i)
+	t.addLiteral(LSQ.text, tasksModel.createLiteral(query))
+	t.addLiteral(IguanaVocab.queryId, i)
 
+	tasks.add(t)
+}
 
-Iterable<Query> tasks = Iterables.concat(queries, queries, queries)
+tasksModel.write(System.out, "TURTLE")
+
+// Create tasks from the queries
+Iterator<Resource> taskExecs = IntStream.range(0, 5).boxed().flatMap({ runId ->
+	tasks.stream().map({it -> [runId, it]})
+}).map({it ->
+  Model m = ModelFactory.createDefaultModel()
+  Resource x = it[1]
+  Model n = ResourceUtils.reachableClosure(x)
+  m.add(n)
+  x = x.inModel(m)
+  long queryId = x.getRequiredProperty(IguanaVocab.queryId).getObject().asLiteral().getLong()
+  def r = m.createResource("http://example.org/query-" + queryId + "-run-" + it[0])
+  r.addProperty(IguanaVocab.workload, x)
+  r
+  //m.write(System.out, "TURTLE")
+}).iterator()
+
+//Function<ExecutionContext, String> createExecutionIriStr = { ec ->
+//	long taskId = ec.getTaskResource().getRequiredProperty(IguanaVocab.queryId).getObject().asLiteral().getLong()
+//   "http://example.org/task-execution-" + run + "-" + taskId
+//};
+
+Function<Resource, Query> taskToEntity = { r ->
+	r.getRequiredProperty(IguanaVocab.workload).getObject().asResource().getRequiredProperty(LSQ.text).getObject().asLiteral().getString()
+//	queryParser.apply(queryStr)
+}
+//Iterable<Query> tasks = Iterables.concat(queries, queries, queries)
 
 //QueryExecutionFactory dataQef = FluentQueryExecutionFactory
 //    //.from(model)
@@ -164,7 +208,10 @@ ExecutorService cacheExecutorService = Executors.newCachedThreadPool();
 
 QueryExecutionFactoryViewMatcherMaster tmp = QueryExecutionFactoryViewMatcherMaster.create(rawQef, queryCacheBuilder, cacheExecutorService);
 Cache<Node, StorageEntry> queryCache = tmp.getCache();
-QueryExecutionFactory cachedQef = new QueryExecutionFactoryParse(tmp, SparqlQueryParserImpl.create());
+rawQef = tmp
+rawQef = new QueryExecutionFactoryRemap(rawQef);
+
+QueryExecutionFactory cachedQef = new QueryExecutionFactoryParse(rawQef, SparqlQueryParserImpl.create());
 
 
 QueryExecutionFactory dataQef = new QueryExecutionFactoryCompare(cachedQef, rawQef)
@@ -200,10 +247,11 @@ SparqlTaskExecutor sparqlTaskExecutor = new SparqlTaskExecutor(dataQef, QueryExe
 // Note: delay in ms, should upgrade this class to Java8
 TaskDispatcher taskDispatcher =
     new TaskDispatcher(
-        tasks.iterator(),
+        taskExecs,//tasks.iterator(),
+		taskToEntity,
         sparqlTaskExecutor,
         new DelayerDefault(0), // ms
-        { println("" + it) }) // report callback
+        { it.getModel().write(System.out, "TURTLE") }) // report callback
 
 
 List<Runnable<?>> runnables = Collections.singletonList(taskDispatcher);
