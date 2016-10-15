@@ -3,6 +3,7 @@ package org.aksw.iguana.reborn;
 import java.io.IOException;
 import java.util.List;
 
+import org.aksw.iguana.reborn.charts.datasets.IguanaDatasetProcessors;
 import org.apache.jena.ext.com.google.common.collect.Iterables;
 import org.jfree.data.category.DefaultCategoryDataset;
 import org.springframework.boot.SpringApplication;

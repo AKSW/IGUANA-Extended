@@ -28,10 +28,10 @@ public class ChartUtilities2 {
 			throws DocumentException, FileNotFoundException
 	{
 		OutputStream out = new FileOutputStream(file);
-		saveChartAsPDF(chart, out, width, height);
+		saveChartAsPDF(out, chart, width, height);
 	}
 
-	public static void saveChartAsPDF(JFreeChart chart, OutputStream out, int width, int height)
+	public static void saveChartAsPDF(OutputStream out, JFreeChart chart, int width, int height)
 			throws DocumentException
 	{
 		Rectangle pagesize = new Rectangle(width, height);
