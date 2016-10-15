@@ -22,6 +22,7 @@ import org.apache.jena.riot.RDFDataMgr;
 import org.apache.jena.shared.PrefixMapping;
 import org.apache.jena.shared.impl.PrefixMappingImpl;
 import org.apache.jena.sparql.core.Prologue;
+import org.apache.jena.sparql.engine.binding.Binding;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.LegendItemCollection;
@@ -43,7 +44,9 @@ public class IguanaDatasetProcessors {
 
 	public static void main(String[] args) {
 
-		Model m = RDFDataMgr.loadModel("/tmp/data.ttl");
+		Model m = RDFDataMgr.loadModel("/home/raven/tmp/iguana-test-data.ttl");
+
+
 
 
 		PrefixMapping pm = new PrefixMappingImpl();
@@ -52,6 +55,8 @@ public class IguanaDatasetProcessors {
 		pm.setNsPrefix("ig", IguanaVocab.ns);
 		pm.setNsPrefix("lsq", LSQ.ns);
 		pm.setNsPrefix("time", OWLTIME.ns);
+		pm.setNsPrefix("qb", "http://datacube.org/ontology#");
+
 
 		Function<Query, Query> queryTransform = new QueryTransformPrefix(pm);
 
@@ -61,10 +66,109 @@ public class IguanaDatasetProcessors {
 					.withParser(SparqlQueryParserImpl.create(Syntax.syntaxARQ, new Prologue(pm)))
 				.end()
 				.create();
-		createDataset(qef);
+
+
+
+		createDataset(m, qef);
 
 	}
 
+
+	/**
+	 * The problemis, that we would have to generate URIs for (workload, series) combinations...
+	 * But actually, we could for each run just attach a series attribute.
+	 *
+	 *
+	 * Compute a set of mean values for
+	 * - a given set of observations
+	 * - projected onto a related set of resourecs
+	 * - with each grouping corresponding to a data series
+	 * - having measure property 'measure'
+	 *
+	 * Select ?s (Count(DISTINCT ?run) / SUM(?runTime) As ?avg) {
+	 *   observations(?o)
+	 *   projections(?o -> ?s)
+	 *   dataseries(?o -> ?d)
+	 *
+	 *
+     * } Group by ?d
+     *
+	 *
+	 *
+	 * @param model
+	 * @param observations
+	 * @param subjects
+	 * @param groupings
+	 * @param measure
+	 */
+//	public static void enrichMean(Model model, Concept observations, Relation projection, Relation measure, Relation series) {
+//		ConceptUtils.createRelatedConcept(obs, projection);
+//	}
+
+	/**
+	 * Allocate the URIs for the data series and attach the id atributes
+	 * x A Series ; x workloadId ?w ; x seriesId
+	 */
+	public static final String computeAvg = String.join("\n",
+			"CONSTRUCT {",
+			"  ?s",
+			"    qb:dataset ?d ;",
+			"    ig:workload ?w ;",
+			"    ig:avg ?avg ;",
+			"    .",
+			"",
+			"}",
+			"{",
+			"  { SELECT (IRI(CONCAT('http://avg-', STR(?did), '-', STR(?wid))) AS ?s) ?d ?w (AVG(?m) AS ?avg) {",
+			"    ?x",
+			"      ig:workload ?w ;",
+			"      qb:dataset ?d ;",
+			"      time:numericDuration ?m ;",
+			"    .",
+			"    ?d rdfs:label ?did .",
+			"    ?w ig:queryId ?wid .",
+			"  } GROUP BY ?d ?w ?did ?wid}",
+			"}");
+
+//	/**
+//	 * Computes the average for each workload over all series (in all experiments)
+//	 *
+//	 *
+//	 */
+//	public static final String computeAvg = String.join("\n",
+//		"CONSTRUCT {",
+//		"    ?i ig:avg ?avg",
+//		"}",
+//		"{",
+//		"  { SELECT (IRI(CONCAT('http://foo-', STR(?i), '-', STR(?r))) AS ?s) ?i ?r (AVG(?m) AS ?avg) {",
+//		"    ?x",
+//		"      ig:workload ?i ;",
+//		"      time:numericDuration ?m ;",
+//		"      .",
+//		"  } GROUP BY ?i ?r }",
+//		"}");
+
+
+	public static final String computeStdDev = String.join("\n",
+		"CONSTRUCT {",
+		"    ?i ig:stdDeviation ?stdDev",
+		"}",
+		"{",
+		"  { SELECT ?i (SUM(?sqErr) AS ?stdDev) {",
+		"    ?i",
+		"      ig:avg ?a ;",
+		"      qb:dataset ?d ;",
+		"      ig:workload ?w ;",
+		"    .",
+		"    ?x",
+		"      qb:dataset ?d ;",
+		"      ig:workload ?w ;",
+		"      time:numericDuration ?m ;",
+		"      .",
+		"    BIND(?m - ?a AS ?err)",
+		"    BIND(?err * ?err AS ?sqErr)",
+		"  } GROUP BY ?i }",
+		"}");
 
 	/**
 	 * Prepare data for a stacked bar-chart
@@ -74,21 +178,31 @@ public class IguanaDatasetProcessors {
 	 * @param model
 	 * @return
 	 */
-	public static CategoryDataset createDataset(QueryExecutionFactory qef) {//Model model) {
+	public static CategoryDataset createDataset(Model model, QueryExecutionFactory qef) {//Model model) {
 		// (avgExecutionTime, executorLabel, queryId)
 		// Create the avg execution time for each executor
 
+		qef.createQueryExecution("CONSTRUCT { ex:DefaultDataset rdfs:label \"Cached\" } { }").execConstruct(model);
+		qef.createQueryExecution("CONSTRUCT { ?x qb:dataset ex:DefaultDataset } { ?x ig:run ?r }").execConstruct(model);
 
+		qef.createQueryExecution(computeAvg).execConstruct(model);
+		qef.createQueryExecution(computeStdDev).execConstruct(model);
+
+		model.write(System.out, "TURTLE");
+
+				if(true) { return null; }
 
 		String queryStr = String.join("\n",
 			"SELECT ?r ?i ?m ?c {",
 			"  ?s",
 			"    ig:run ?r ;",
-			"    ig:workload/ig:id ?i ;", // ; lsq:text ?w]",
+			"    ig:workload/ig:queryId ?i ;", // ; lsq:text ?w]",
 			"    time:numericDuration ?m ;",
-			"    ex:executor/rdfs:label ?c ;",
+			//"    ex:executor/rdfs:label ?c ;",
 			"    .",
 			"}");
+
+		// standardabweichung := summe der quadratischen abweichungen vom mittelwert
 
 		//QueryExecutionFactoryQueryTransform
 
@@ -97,10 +211,24 @@ public class IguanaDatasetProcessors {
 		ResultSet rs = qe.execSelect();
 
 //
-//		while(rs.hasNext()) {
-//			Binding b = rs.nextBinding();
-//			b.get(var);
-//		}
+		System.out.println("results:");
+		while(rs.hasNext()) {
+			Binding b = rs.nextBinding();
+			System.out.println(b);
+			//b.get(var);
+		}
+		System.out.println("end of results.");
+
+		// Given: [runId] [queryId] [executionId] [executorId]
+
+		// Goal: [avg] [stdev] [queryId] [executorId]
+
+		// For each query id, count the number of runs and the sum of the execution times, then divide
+
+		/*
+		 * Bind (?runTime - ?avg As ?x)
+		 * Bind(?x * ?x As ?dev)
+		 */
 
 		Multimap<RDFNode, Resource> catToResources = HashMultimap.create();
 
