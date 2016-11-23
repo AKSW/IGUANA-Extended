@@ -24,6 +24,9 @@ import org.apache.jena.shared.impl.PrefixMappingImpl;
 import org.apache.jena.sparql.core.Prologue;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.axis.CategoryAxis;
+import org.jfree.chart.axis.CategoryLabelPositions;
+import org.jfree.chart.axis.LogAxis;
+import org.jfree.chart.axis.LogarithmicAxis;
 import org.jfree.chart.axis.NumberAxis;
 import org.jfree.chart.axis.ValueAxis;
 import org.jfree.chart.plot.CategoryPlot;
@@ -63,8 +66,8 @@ public class IguanaDatasetProcessors {
 				.create();
 
 
-
-		CategoryDataset dataset = createDataset(m, qef);
+		enrichWithAvgAndStdDeviation(m);
+		CategoryDataset dataset = createDataset(m);
 		//CategoryDataset dataset = createTestDataset();
 
 		JFreeChart chart = createStatisticalBarChart(dataset);
@@ -73,6 +76,42 @@ public class IguanaDatasetProcessors {
 
 	}
 
+
+	public static QueryExecutionFactory createQef(Model model) {
+		PrefixMapping pm = new PrefixMappingImpl();
+		pm.setNsPrefixes(PrefixMappingImpl.Extended);
+		pm.setNsPrefix("ex", "http://example.org/ontology#");
+		pm.setNsPrefix("ig", IguanaVocab.ns);
+		pm.setNsPrefix("lsq", LSQ.ns);
+		pm.setNsPrefix("time", OWLTIME.ns);
+		pm.setNsPrefix("qb", "http://datacube.org/ontology#");
+
+
+		Function<Query, Query> queryTransform = new QueryTransformPrefix(pm);
+
+		QueryExecutionFactory qef = FluentQueryExecutionFactory.from(model)
+				.config()
+					.withQueryTransform(queryTransform)
+					.withParser(SparqlQueryParserImpl.create(Syntax.syntaxARQ, new Prologue(pm)))
+				.end()
+				.create();
+
+		return qef;
+	}
+
+	public static void enrichWithAvgAndStdDeviation(Model model) {
+		QueryExecutionFactory qef = createQef(model);
+
+		//CategoryDataset dataset = createDataset(m, qef);
+		// (avgExecutionTime, executorLabel, queryId)
+		// Create the avg execution time for each executor
+
+		qef.createQueryExecution(computeAvg).execConstruct(model);
+		qef.createQueryExecution(computeStdDev).execConstruct(model);
+
+		//model.write(System.out, "TURTLE");
+
+	}
 
 	/**
 	 * The problemis, that we would have to generate URIs for (workload, series) combinations...
@@ -126,7 +165,7 @@ public class IguanaDatasetProcessors {
 			"      time:numericDuration ?m ;",
 			"    .",
 			"    ?d rdfs:label ?did .",
-			"    ?w ig:queryId ?wid .",
+			"    ?w rdfs:label ?wid .",
 			"  } GROUP BY ?d ?w ?did ?wid}",
 			"}");
 
@@ -178,17 +217,7 @@ public class IguanaDatasetProcessors {
 	 * @param model
 	 * @return
 	 */
-	public static StatisticalCategoryDataset createDataset(Model model, QueryExecutionFactory qef) {//Model model) {
-		// (avgExecutionTime, executorLabel, queryId)
-		// Create the avg execution time for each executor
-
-		qef.createQueryExecution("CONSTRUCT { ex:DefaultDataset rdfs:label \"Cached\" } { }").execConstruct(model);
-		qef.createQueryExecution("CONSTRUCT { ?x qb:dataset ex:DefaultDataset } { ?x ig:run ?r }").execConstruct(model);
-
-		qef.createQueryExecution(computeAvg).execConstruct(model);
-		qef.createQueryExecution(computeStdDev).execConstruct(model);
-
-		model.write(System.out, "TURTLE");
+	public static StatisticalCategoryDataset createDataset(Model model) {//Model model) {
 
 		String queryStr = String.join("\n",
 			"SELECT ?a ?sd ?did ?wid {",
@@ -196,16 +225,16 @@ public class IguanaDatasetProcessors {
 			"    ig:avg ?a ;",
 			"    ig:stdDeviation ?sd ;",
 			"    qb:dataset/rdfs:label ?did ;",
-			"    ig:workload/ig:queryId ?wid ;", // ; lsq:text ?w]",
+			"    ig:workload/rdfs:label ?wid ;", // ; lsq:text ?w]",
 			"    .",
-			"}");
+			"} ORDER BY ASC(?did) ASC(?wid)");
 
 		// standardabweichung := summe der quadratischen abweichungen vom mittelwert
 
 		//QueryExecutionFactoryQueryTransform
 
 		// get result vars and interpret them according to the order
-		QueryExecution qe = qef.createQueryExecution(queryStr);
+		QueryExecution qe = createQef(model).createQueryExecution(queryStr);
 		ResultSet rs = qe.execSelect();
 
 //
@@ -221,8 +250,6 @@ public class IguanaDatasetProcessors {
 			result.add(a, sd, series, workload);
 		}
 		//System.out.println("end of results.");
-
-
 
 		return result;
 	}
@@ -257,7 +284,14 @@ public class IguanaDatasetProcessors {
 		xAxis.setUpperMargin(0.01d); // percentage of space after last bar
 		xAxis.setCategoryMargin(0.05d); // percentage of space between
 										// categories
-		final ValueAxis yAxis = new NumberAxis("Value");
+		xAxis.setCategoryLabelPositions(CategoryLabelPositions.UP_45);
+		final LogarithmicAxis yAxis = new LogarithmicAxis("Time (s)");//new NumberAxis("Value");
+		yAxis.setAutoRange(true);
+		//yAxis.setAutoRangeMinimumSize(/size);
+		yAxis.setLowerBound(0.0001);
+		yAxis.setMinorTickMarksVisible(true);
+		yAxis.setAutoRangeIncludesZero(false);
+		yAxis.setStrictValuesFlag(false);
 
 		// define the plot
 		final CategoryItemRenderer renderer = new StatisticalBarRenderer();
