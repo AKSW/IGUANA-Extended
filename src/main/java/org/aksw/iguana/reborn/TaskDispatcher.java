@@ -1,5 +1,6 @@
 package org.aksw.iguana.reborn;
 
+import java.io.StringWriter;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;
 import java.util.Calendar;
@@ -18,13 +19,12 @@ import org.aksw.jena_sparql_api.delay.extra.Delayer;
 import org.aksw.simba.lsq.vocab.LSQ;
 import org.aksw.simba.lsq.vocab.PROV;
 import org.apache.jena.rdf.model.Resource;
+import org.apache.jena.util.ResourceUtils;
 import org.apache.jena.vocabulary.RDFS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.google.common.base.Stopwatch;
-
-import groovy.ui.SystemOutputInterceptor;
 
 
 /**
@@ -65,11 +65,11 @@ public class TaskDispatcher<T>
 
     public TaskDispatcher(
             //Iterator<T> taskSource,
-    		Iterator<Resource> taskSource,
-    		Function<Resource, T> taskToEntity,
-    		//Function<? super ExecutionContext<T>, ? extends String> taskToExecutionIriStr,
+            Iterator<Resource> taskSource,
+            Function<Resource, T> taskToEntity,
+            //Function<? super ExecutionContext<T>, ? extends String> taskToExecutionIriStr,
             //BiConsumer<T, Consumer<? super E>> taskConsumer,
-    		BiConsumer<T, Resource> taskConsumer,
+            BiConsumer<T, Resource> taskConsumer,
             //BiFunction<T, Resource, R> taskConsumer,
             //TriConsumer<T, Resource, R> postProcessor,
             TriConsumer<T, Resource, Exception> exceptionHandler,
@@ -91,58 +91,64 @@ public class TaskDispatcher<T>
     @Override
     public void run() {
         ExecutorService executorService = Executors.newFixedThreadPool(1);
-    	try {
-	        //while (
-	        for(int i = 0; taskSource.hasNext() && !Thread.currentThread().isInterrupted(); ++i) {
-	            Resource task = taskSource.next();
-	            try {
-	                //Model m = ModelFactory.createDefaultModel();
-	            	//String prefix = "http://ex.org/";
-	            	//Resource r = m.createResource(prefix + "task-execution-" + i);
+        try {
+            //while (
+            for(int i = 0; taskSource.hasNext() && !Thread.currentThread().isInterrupted(); ++i) {
+                Resource task = taskSource.next();
+                try {
+                    //Model m = ModelFactory.createDefaultModel();
+                    //String prefix = "http://ex.org/";
+                    //Resource r = m.createResource(prefix + "task-execution-" + i);
 
-	                delayer.doDelay();
-	                //T task = taskSource.next();
-	                logger.debug("Executing task #" + i + ": " + task);
+                    delayer.doDelay();
+                    //T task = taskSource.next();
+                    logger.debug("Executing task #" + i + ": " + task);
 
-	                T t = taskToEntity.apply(task);
+                    T t = taskToEntity.apply(task);
 
-	                int mode = 2;
-	                if(mode == 0) {
-		                Thread thread = new Thread(() -> execute(task, t));
-		                thread.start();
+                    int mode = 2;
+                    if(mode == 0) {
+                        Thread thread = new Thread(() -> execute(task, t));
+                        thread.start();
 
-		                Thread.sleep(2000);
+                        Thread.sleep(2000);
 
-		                if(thread.isAlive()) {
-		                	//System.out.println("TIMEOUT - Forcefully killing thread");
-		                	thread.stop();
-		                	throw new TimeoutException();
-		                }
-	                } else if(mode == 1) {
-		                Future<?> future = executorService.submit(() -> execute(task, t));
-		                future.get(20, TimeUnit.SECONDS);
-		                //executorService.submit(() -> System.out.println("i got called"));
-	                } else {
-	                	execute(task, t);
-	                }
-		        } catch (InterruptedException e) {
-		            Thread.currentThread().interrupt();
-		            break;
-		        } catch (TimeoutException e) {
-		        	task.addLiteral(RDFS.comment, "TIMEOUT");
-		        } catch(Exception e) {
-		            logger.error("Should never come here", e);
-		            throw new RuntimeException(e);
-		        }
+                        if(thread.isAlive()) {
+                            //System.out.println("TIMEOUT - Forcefully killing thread");
+                            thread.stop();
+                            throw new TimeoutException();
+                        }
+                    } else if(mode == 1) {
+                        Future<?> future = executorService.submit(() -> execute(task, t));
+                        future.get(20, TimeUnit.SECONDS);
+                        //executorService.submit(() -> System.out.println("i got called"));
+                    } else {
+                        execute(task, t);
+                    }
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                    break;
+                } catch (TimeoutException e) {
+                    task.addLiteral(RDFS.comment, "TIMEOUT");
+                } catch(Exception e) {
+                    logger.error("Should never come here", e);
+                    throw new RuntimeException(e);
+                }
 
-	            //task.getModel().write(System.out, "TURTLE");
-	        }
-    	} finally {
-    		executorService.shutdown();
-    	}
+                //task.getModel().write(System.out, "TURTLE");
+            }
+        } finally {
+            executorService.shutdown();
+        }
     }
 
     public void execute(Resource task, T t) {
+
+        if(task.getProperty(OWLTIME.numericDuration) != null) {
+            StringWriter tmp = new StringWriter();
+            ResourceUtils.reachableClosure(task).write(tmp, "TTL");
+            throw new RuntimeException("Task " + task + " already has a numeric duration assigned: " + tmp);
+        }
 
         //Instant startInstant = Instant.now();
         Calendar startInstant = new GregorianCalendar();
@@ -150,7 +156,7 @@ public class TaskDispatcher<T>
 
 //    	String executionIriStr = taskToExecutionIriStr.apply(ec); //task, startInstant);
 //    	Resource r = m.createResource(executionIriStr);
-    	//task.addProperty(PROV.wasAssociatedWith, task);
+        //task.addProperty(PROV.wasAssociatedWith, task);
 
         task.addLiteral(PROV.startedAtTime, startInstant);
         // Use guava as it uses System.nanoTime()
@@ -188,7 +194,7 @@ public class TaskDispatcher<T>
 
         try {
             //reportConsumer.accept(fullReport);
-        	reportConsumer.accept(task);
+            reportConsumer.accept(task);
         } catch(Exception e) {
             logger.error("Failed to send report to consumer", e);
             throw new RuntimeException(e);
