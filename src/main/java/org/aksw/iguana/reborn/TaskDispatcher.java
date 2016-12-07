@@ -57,7 +57,7 @@ public class TaskDispatcher<T>
     //protected TriConsumer<T, Resource, R> postProcessor;
     protected TriConsumer<T, Resource, Exception> exceptionHandler;
     //protected Consumer<DefaultTaskReport<T, TaskTimeReport, E>> reportConsumer;
-    protected Consumer<Resource> reportConsumer;
+    protected BiConsumer<T, Resource> reportConsumer;
 
     protected Delayer delayer;
 
@@ -73,7 +73,7 @@ public class TaskDispatcher<T>
             //BiFunction<T, Resource, R> taskConsumer,
             //TriConsumer<T, Resource, R> postProcessor,
             TriConsumer<T, Resource, Exception> exceptionHandler,
-            Consumer<Resource> reportConsumer,
+            BiConsumer<T, Resource> reportConsumer,
             Delayer delayer
             //Consumer<DefaultTaskReport<T, TaskTimeReport, E>> reportConsumer
             ) {
@@ -194,7 +194,7 @@ public class TaskDispatcher<T>
 
         try {
             //reportConsumer.accept(fullReport);
-            reportConsumer.accept(task);
+            reportConsumer.accept(t, task);
         } catch(Exception e) {
             logger.error("Failed to send report to consumer", e);
             throw new RuntimeException(e);
