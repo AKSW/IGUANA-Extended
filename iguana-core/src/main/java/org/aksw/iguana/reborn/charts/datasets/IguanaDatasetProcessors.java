@@ -14,6 +14,7 @@ import java.util.function.Function;
 
 import org.aksw.commons.util.strings.StringPrettyComparator;
 import org.aksw.iguana.reborn.ChartUtilities2;
+import org.aksw.iguana.vocab.IguanaVocab;
 import org.aksw.jena_sparql_api.core.FluentQueryExecutionFactory;
 import org.aksw.jena_sparql_api.core.QueryExecutionFactory;
 import org.aksw.jena_sparql_api.prefix.core.QueryTransformPrefix;

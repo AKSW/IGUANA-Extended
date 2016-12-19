@@ -1,4 +1,4 @@
-package org.aksw.iguana.reborn.charts.datasets;
+package org.aksw.iguana.vocab;
 
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
